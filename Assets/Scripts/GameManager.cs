@@ -34,7 +34,7 @@ public class GameManager
 
 	public event ActionEventHandler Action1Pressed;
 	public event ActionEventHandler Action2Pressed;
-	public event ActionEventHandler PausePressed;
+    public event ActionEventHandler PausePressed;
 	#endregion
 	
 	#region PUBLIC PROPERTIES
@@ -123,18 +123,17 @@ public class GameManager
 	#region ACTION METHODS
 	public void ActionHandler(Action which)
 	{
-		if(!IsInMenu && !IsInLevel && !IsInPause)
-			return;
-		
-		switch(which)
+        Debug.Log("COUCOU");
+        switch(which)
 		{
-			case Action.Action1 :
+			/*case Action.Action1 :
 				Action1Pressed();
 				break;
 			case Action.Action2 :
 				Action2Pressed();
-				break;
+				break;*/
 			case Action.Pause :
+                this.IsInPause = true;
 				PausePressed();
 				break;
 		}
