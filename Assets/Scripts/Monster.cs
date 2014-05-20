@@ -26,7 +26,10 @@ enum Movement
 	Front,
 	Back,
 	Left,
-	Right
+	Right,
+	FrontOrBack,
+	LeftOrRight,
+	Total
 };
 
 public class Monster : MonoBehaviour {
