@@ -10,7 +10,6 @@ public class ButtonScript : MonoBehaviour
 
     void OnMouseEnter()
     {
-
         renderer.material.color = Color.gray;
     }
 
