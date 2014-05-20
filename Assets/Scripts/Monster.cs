@@ -3,6 +3,32 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+enum Attack
+{
+	Body,
+	Head,
+	Feets,
+	Arms,
+	Total
+};
+
+enum Shield
+{
+	Body,
+	Head,
+	Feets,
+	Arms,
+	Total
+};
+
+enum Movement
+{
+	Front,
+	Back,
+	Left,
+	Right
+};
+
 public class Monster : MonoBehaviour {
 
 	Vector3 Position;
