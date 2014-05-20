@@ -22,6 +22,8 @@ public class Field : MonoBehaviour
 		}
 
 		Generate();
+
+		GameManager.Instance.LaunchLevel();
 	}
 	
 	// Update is called once per frame
