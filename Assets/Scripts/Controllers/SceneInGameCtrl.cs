@@ -8,7 +8,25 @@ public class SceneInGameCtrl : MonoBehaviour
     public GameObject RootInGame;
 
     // Update is called once per frame
-    void Update()
+
+
+    void Start()
+    {
+        GameManager.Instance.PausePressed += () => { DisplayPause(); };
+    }
+
+    void DisplayPause()
+    {
+        print("HIT PRESSED");
+        
+        Pause.SetActive(GameManager.Instance.IsInPause);
+        RootInGame.SetActive(!GameManager.Instance.IsInPause);
+    }
+
+
+
+    
+    /*void Update()
     {
 
         if (Input.GetKeyDown(KeyCode.Escape) && !Pause.activeSelf)
@@ -16,5 +34,5 @@ public class SceneInGameCtrl : MonoBehaviour
             Pause.SetActive(true);
             RootInGame.SetActive(false);
         }
-    }
+    }*/
 }

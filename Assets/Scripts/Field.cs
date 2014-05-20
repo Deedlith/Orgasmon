@@ -39,6 +39,7 @@ public class Field : MonoBehaviour
 			Vector3 pos = new Vector3(square.PositionX, 0.0f, square.PositionZ);
 			
 			GameObject squareGo = (GameObject) Instantiate(Resources.Load("Prefabs/Prefab_Square"), pos, Quaternion.identity);
+            squareGo.transform.parent = this.transform.parent;
 			squareGo.name = "Square_" + squareCounter++;
 			ListSquaresGo.Add(squareGo);
 		}
