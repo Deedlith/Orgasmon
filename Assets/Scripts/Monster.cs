@@ -23,26 +23,18 @@ enum Shield
 
 enum Movement
 {
-	Front,
-	Back,
-	Left,
-	Right,
-	FrontOrBack,
-	LeftOrRight,
-	Total
+	Horizontal,
+	Vertcal
 };
 
 public class Monster : MonoBehaviour {
 
-	Vector3 Position;
-	Quaternion Rotation;
-
-	int Level;
-	int PV;
-	List<Attack> Attacks;
-	List<Shield> Shields;
-	List<Movement> Movements;
-	int Speed;
+	int _level;
+	int _pv;
+	List<Attack> _listAttacks;
+	List<Shield> _listShields;
+	List<Movement> _listMovements;
+	int _sSpeed;
 
 	// Use this for initialization
 	void Start () {
