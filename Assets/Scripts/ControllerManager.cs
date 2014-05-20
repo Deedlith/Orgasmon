@@ -11,7 +11,11 @@ public class ControllerManager : MonoBehaviour
 	HasActionPressed _hasAction1Pressed;
 	HasActionPressed _hasAction2Pressed;
 	HasActionPressed _hasPausePressed;
-	
+
+    void Awake()
+    {
+        DontDestroyOnLoad(this.gameObject);
+    }
 	// Use this for initialization
 	void Start ()
 	{

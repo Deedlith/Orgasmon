@@ -71,6 +71,15 @@ public class GameManager
 		this.IsInPause = false;
 		LevelEvent(this.IsInLevel);
 	}
+
+    public void LaunchMenu()
+    {
+        MonoBehaviour.print("LAUNCH MENU");
+        this.IsInLevel = false;
+        this.IsInMenu = true;
+        this.IsInPause = false;
+        MenuEvent(this.IsInMenu);
+    }
 	
 	public void PauseLevel()
 	{
@@ -123,18 +132,18 @@ public class GameManager
 	#region ACTION METHODS
 	public void ActionHandler(Action which)
 	{
-        Debug.Log("COUCOU");
         switch(which)
 		{
-			/*case Action.Action1 :
+			case Action.Action1 :
 				Action1Pressed();
 				break;
 			case Action.Action2 :
 				Action2Pressed();
-				break;*/
+				break;
 			case Action.Pause :
-                this.IsInPause = true;
+                PauseLevel();
 				PausePressed();
+                PauseEvent(this.IsInPause);
 				break;
 		}
 	}

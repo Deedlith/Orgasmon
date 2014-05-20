@@ -20,6 +20,7 @@ public class ButtonScript : MonoBehaviour
 
     void OnMouseDown()
     {
+        /*print("wazaaaaaa");
         if (!NextScene.Equals(""))
             Application.LoadLevel(NextScene);
         if (this.name.Equals("Return"))
@@ -30,6 +31,6 @@ public class ButtonScript : MonoBehaviour
         if (this.name.Equals("Quit"))
         {
             Application.Quit();
-        }
+        }*/
     }
 }
