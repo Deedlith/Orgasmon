@@ -56,6 +56,8 @@ public class Monster : MonoBehaviour
 	public int speed;
     public int overall = 0;
 
+	public Square currentSquare = null;
+
     public bool isSelected;
     public Team whicTeam;
 

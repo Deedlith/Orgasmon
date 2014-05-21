@@ -9,7 +9,7 @@ public class Field : MonoBehaviour
 	
 	public List<Square> ListSquares = new List<Square>();
 	public List<GameObject> ListSquaresGo = new List<GameObject>();
-	public List<GameObject> ListMonstersGo = new List<GameObject>();
+	public List<Monster> ListMonsters = new List<Monster>();
 	
 	void Start () {
 		for(int i = 0; i < 10; i++)
@@ -44,7 +44,7 @@ public class Field : MonoBehaviour
 			ListSquaresGo.Add(squareGo);
 		}
 	}
-	
+
 	/* Ca peut servir pour savoir si un combat doit s'enclencher. A adapter bien sur */
 	/*public bool DicesHasNeighbor()
 	{

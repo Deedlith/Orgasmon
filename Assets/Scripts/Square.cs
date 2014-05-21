@@ -12,7 +12,7 @@ public class Square
 		PositionZ = z;
 	}
 	
-	public void SetDice(bool set)
+	public void SetMonster(bool set)
 	{
 		HasMonster = set;
 	}
