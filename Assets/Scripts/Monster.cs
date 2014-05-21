@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-enum Attack
+public enum Attack
 {
 	Body,
 	Head,
@@ -12,7 +12,7 @@ enum Attack
 	Total
 };
 
-enum Shield
+public enum Shield
 {
 	Body,
 	Head,
@@ -21,28 +21,84 @@ enum Shield
 	Total
 };
 
-enum Movement
+public enum Movement
 {
 	Horizontal,
 	Vertcal
 };
 
-public class Monster : MonoBehaviour {
+public enum Team
+{
+    A,
+    B
+}
+
+public struct AttackPattern
+{
+    public Attack atk;
+    public int power;
+}
+
+public struct DefensePattern
+{
+    public Shield def;
+    public int power;
+}
+
+public class Monster : MonoBehaviour
+{
 
 	int _level;
 	int _pv;
-	List<Attack> _listAttacks;
-	List<Shield> _listShields;
-	List<Movement> _listMovements;
-	int _sSpeed;
+    public List<AttackPattern> listAttackPatterns;
+    public List<DefensePattern> listDefensePatterns;
+	public List<Movement> listMovements;
+	public int speed;
+    public int overall = 0;
+
+    public bool isSelected;
+    public Team whicTeam;
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+    {
 	
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
 	
 	}
+
+    public int LaunchAttack(Monster other)
+    {
+        // Sélectionner un pattern d'attaque
+        int random = Random.Range(0, listAttackPatterns.Count);
+        var atkPattern =  listAttackPatterns.ElementAt(random);
+        /*** ALLUME LA PARTIE DU CORPS QUI CORRESPOND ***/
+        // Sélectionner un pattern de défense
+        random = Random.Range(0, other.listDefensePatterns.Count);
+        var defPattern = other.listDefensePatterns.ElementAt(random);
+        /*** ALLUME LA PARTIE DU CORPS QUI CORRESPOND ***/
+
+        // SI la défense est AU MOINS plus rapide que l'attaque ALORS la défense est complète
+        // SINON on applique un malus à la défense
+        int timeAtk = this.speed * atkPattern.power;
+        int timeDef = other.speed * defPattern.power;
+        int damage = 0;
+        if (timeDef <= timeAtk)
+        {
+            damage = (atkPattern.power - defPattern.power < 0) ? 0 : Mathf.CeilToInt(atkPattern.power - defPattern.power);
+        }
+        else
+        {
+            int coefMinus = Mathf.RoundToInt(timeAtk / timeDef);
+            int defPower = Mathf.FloorToInt(defPattern.power * coefMinus);
+            damage = (atkPattern.power - defPower < 0) ? 0 : Mathf.CeilToInt(atkPattern.power - defPower);
+        }
+
+        print("DAMAGE : " + damage);
+        return damage;
+    }
 }
