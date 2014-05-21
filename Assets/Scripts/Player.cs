@@ -48,7 +48,7 @@ public class Player : MonoBehaviour {
 				print ("SQUARE SELECTED : " + objectHit.name);
 
 				GameObject currentMonsterGO = GameObject.Find(_monsterSelected);
-				Monster currentMonster = Field.GetMonsterFromGo(currentMonsterGO);
+				Monster currentMonster = Field.Instance.GetMonsterFromGo(currentMonsterGO);
 				MoveMonster(currentMonster, currentMonsterGO);
 			}
 			else if(objectHit.name.Substring(0, 5).Equals("TeamA"))
