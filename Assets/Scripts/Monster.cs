@@ -59,7 +59,7 @@ public class Monster
 	public Square currentSquare = null;
 
     public bool isSelected;
-    public Team whicTeam;
+    public Team whichTeam;
 
 
 
@@ -102,7 +102,7 @@ public class Monster
             damage = (atkPattern.power - defPower < 0) ? 0 : Mathf.CeilToInt(atkPattern.power - defPower);
         }
 
-        MonoBehaviour.print("DAMAGE : " + damage);
+        other.pv -= damage;
         return damage;
     }
 }
