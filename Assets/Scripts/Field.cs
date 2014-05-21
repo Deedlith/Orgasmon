@@ -5,7 +5,22 @@ using System.Linq;
 
 public class Field : MonoBehaviour
 {
-	//public Dice diceSelected = null;
+    #region SINGLETON
+    private static Field _instance = null;
+
+    public static Field Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = new Field();
+            }
+
+            return _instance;
+        }
+    }
+    #endregion
 	
 	public List<Square> ListSquares = new List<Square>();
 	public List<GameObject> ListSquaresGo = new List<GameObject>();
