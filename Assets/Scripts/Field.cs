@@ -43,7 +43,7 @@ public class Field : MonoBehaviour
             m.listMovements = new List<Movement>();
             m.listMovements.Add(Movement.Vertical);
             m.speed = m.level * 3;
-            m.whicTeam = Team.A;
+            m.whichTeam = Team.A;
             ListMonsters.Add(m);
 
             m = new Monster();
@@ -65,12 +65,13 @@ public class Field : MonoBehaviour
             m.listMovements.Add(Movement.Vertical);
             m.pv = 2 * m.level;
             m.speed = m.level * 3;
-            m.whicTeam = Team.B;
+            m.whichTeam = Team.B;
             ListMonsters.Add(m);
         }
 
 		Generate();
 
+		GameManager.Instance.currentTeamTurn = Team.A;
 		GameManager.Instance.LaunchLevel();
 	}
 	
@@ -97,7 +98,7 @@ public class Field : MonoBehaviour
         {
             //Récupère le square min en z pour la Team A et le max pour la Team B et le x current
             Square s;
-            if (monster.whicTeam == Team.A)
+            if (monster.whichTeam == Team.A)
             {
                 s = ListSquares.Where(p => p.PositionX == monsterCounter && p.PositionZ == ListSquares.Min(z => z.PositionZ)).FirstOrDefault();
             }
@@ -110,13 +111,40 @@ public class Field : MonoBehaviour
 
             GameObject monsterGo = (GameObject)Instantiate(Resources.Load("Prefabs/Prefab_Monster"), pos, Quaternion.identity);
             monsterGo.transform.parent = this.transform.parent;
-            monsterGo.name = "Team" + monster.whicTeam.ToString() + "_" + monsterCounter++;
+            monsterGo.name = "Team" + monster.whichTeam.ToString() + "_" + monsterCounter++;
             monster.currentSquare = s;
             monster.isSelected = false;
             ListMonstersGo.Add(monsterGo);
         }
 
         print(ListMonstersGo[0].transform.position);
+	}
+
+	public void CheckEnnemiesPosition()
+	{
+		Monster currentMonster = ListMonsters.Where(lm => (lm.whichTeam.Equals(GameManager.Instance.currentTeamTurn) && (lm.isSelected == true))).FirstOrDefault();
+
+		if(currentMonster != null)
+		{
+			List<Monster> localEnnemies = ListMonsters.Where(lm => (
+																	!(lm.whichTeam.Equals(currentMonster.whichTeam)) 
+																	&& ((lm.currentSquare.PositionX == currentMonster.currentSquare.PositionX + 1 && lm.currentSquare.PositionZ == currentMonster.currentSquare.PositionZ) 
+																		|| (lm.currentSquare.PositionX == currentMonster.currentSquare.PositionX - 1 && lm.currentSquare.PositionZ == currentMonster.currentSquare.PositionZ) 
+																		|| (lm.currentSquare.PositionX == currentMonster.currentSquare.PositionX && lm.currentSquare.PositionZ == currentMonster.currentSquare.PositionZ + 1) 
+																		|| (lm.currentSquare.PositionX == currentMonster.currentSquare.PositionX && lm.currentSquare.PositionZ == currentMonster.currentSquare.PositionZ - 1) 
+			    											))).ToList();
+			if(localEnnemies.Count() == 1)
+			{
+				currentMonster.LaunchAttack(localEnnemies[0]);
+			}
+			else if(localEnnemies.Count() > 1)
+			{
+				int index = Random.Range(0, localEnnemies.Count());
+
+				currentMonster.LaunchAttack(localEnnemies[index]);
+			}
+
+		}
 	}
 
 	/* Ca peut servir pour savoir si un combat doit s'enclencher. A adapter bien sur */
