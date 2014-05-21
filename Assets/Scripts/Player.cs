@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 public class Player : MonoBehaviour {
+
+	string _monsterSelected; // monster currently selected by player
 
 	void Awake()
 	{
@@ -31,41 +34,57 @@ public class Player : MonoBehaviour {
 	
 	void MoveAction()
 	{
-		print ("HIT PRESSED");
 		RaycastHit hit = new RaycastHit();
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		// Sélectionner un monstre
 		// Lui afficher son pattern de déplacement
 		// Si un monstre est sélectionné et qu'il clique sur une des cases, le déplacer sur cette case
 		// Je te laisse le code en dessous exemple
-		/*if(Physics.Raycast(ray, out hit, 1000)) 
+		if(Physics.Raycast(ray, out hit, 1000)) 
 		{
 			GameObject objectHit = hit.collider.gameObject;
 			if(objectHit.name.Substring(0, 6).Equals("Square"))
 			{
-				if(onDice != null)
-				{
-					onDice.IsSelected = false;
-					onDice = null;
-				}
-				
-				this.transform.position = objectHit.transform.position;
-				GameManager.Instance.RefreshGui();
+				print ("SQUARE SELECTED : " + objectHit.name);
+
+				GameObject currentMonsterGO = GameObject.Find(_monsterSelected);
+				Monster currentMonster = Field.GetMonsterFromGo(currentMonsterGO);
+				MoveMonster(currentMonster, currentMonsterGO);
 			}
-			else if(objectHit.name.Substring(0, 4).Equals("Dice"))
+			else if(objectHit.name.Substring(0, 5).Equals("TeamA"))
 			{
-				if(onDice != null)
-					onDice.IsSelected = false;
-				onDice = objectHit.GetComponent<Dice>();
-				onDice.IsSelected = true;
-				this.transform.position = new Vector3(objectHit.transform.position.x,
-				                                      objectHit.collider.bounds.size.y,
-				                                      objectHit.transform.position.z);
-				GameManager.Instance.RefreshGui();
+				print ("MONSTER SELECTED : " + objectHit.name);
+				//StopAllCoroutines();
+				_monsterSelected = objectHit.name;
 			}
-		}*/
+		}
 	}
-	
+
+	void MoveMonster(Monster monster, GameObject monsterGO)
+	{
+		List<Movement> listMovements = monster.listMovements;
+
+		foreach (Movement movement in listMovements) {
+			StartCoroutine(MoveMonsterOneSquare(0.5f, movement, monsterGO));		
+		}
+	}
+
+	IEnumerator MoveMonsterOneSquare(float delayTime, GameObject monster, Movement movement)
+	{
+		print ("Moving monster...");
+		
+		Vector3 start_position = monster.transform.position;
+		Vector3 end_position = new Vector3 (start_position.x, start_position.y, start_position.z++);
+		
+		yield return new WaitForSeconds(delayTime);
+		float startTime = Time.time; // Time.time contains current frame time, so remember starting point
+		while (Time.time-startTime <= 1)
+		{
+			monster.transform.position = Vector3.Lerp(end_position, start_position, Time.time-startTime); // lerp from A to B in one second
+			yield return 1; // wait for next frame
+		}
+	}
+
 	bool CanMove(int x, int z)
 	{
 		return true;
