@@ -5,22 +5,22 @@ Owiiiiiii
 
 HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN ! <3
 =======
-Convention de Nomage:
+Convention de Nommage:
  - Variable privée : _nomDeVariable
- - Variable publiques : nomDeVariable
- - nom de méthode : NomDeMethode
+ - Variable publique : nomDeVariable
+ - Nom de méthode : NomDeMethode
  
  - Fichiers : 
-    Material : Mat_nomDuMaterial  (les mettres dans le dossier Resources/Materials)
-	Texture : Tex_nomDeTexture   (les mettres dans le dossier Resources/Textures)
-	Prefab : Prefab_nomDePrefab (les mettres dans le dossier Resources/Prefabs)
-	Scenes : Scene_nomDeScene (les mettres dans le dossier Scenes)
+    Material : Mat_nomDuMaterial  (les mettre dans le dossier Resources/Materials)
+	Texture : Tex_nomDeTexture   (les mettre dans le dossier Resources/Textures)
+	Prefab : Prefab_nomDePrefab (les mettre dans le dossier Resources/Prefabs)
+	Scenes : Scene_nomDeScene (les mettre dans le dossier Scenes)
 	Script : 
-			- controller d'une scene : EX -> SceneNomDeSceneCtrl (les mettres dans le dossier Scripts/Controllers)
-			- Autres : nom de classe explicite (les mettres dans le dossier Scripts)
+			- controller d'une scène : EX -> SceneNomDeSceneCtrl (les mettre dans le dossier Scripts/Controllers)
+			- Autres : nom de classe explicite (les mettre dans le dossier Scripts)
 			
 	
  - Scenes :
-	Creer un gameOject empty s'appellant "SceneNomDeScene et mettre les éléments dedans
-	Le nom des élements commence par une Majucule et doit être explicite ^_^
+	Créer un gameOject empty s'appellant "SceneNomDeScene" et mettre les éléments dedans
+	Le nom des éléments commence par une Majuscule et doit être explicite ^_^
 	
