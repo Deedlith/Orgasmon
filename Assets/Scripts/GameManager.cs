@@ -41,6 +41,7 @@ public class GameManager
 	public bool IsInLevel { get; set; }
 	public bool IsInMenu { get; set; }
 	public bool IsInPause { get; set; }
+	public Monster.Team currentTeamTurn { get; set; }
 	#endregion
 	
 	#region SINGLETON

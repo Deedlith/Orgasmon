@@ -59,7 +59,7 @@ public class Monster : MonoBehaviour
 	public Square currentSquare = null;
 
     public bool isSelected;
-    public Team whicTeam;
+    public Team whichTeam;
 
 	// Use this for initialization
 	void Start ()
@@ -71,6 +71,11 @@ public class Monster : MonoBehaviour
 	void Update ()
     {
 	
+	}
+
+	public void SetDamage(int damage)
+	{
+		_pv -= damage;
 	}
 
     public int LaunchAttack(Monster other)
@@ -101,6 +106,10 @@ public class Monster : MonoBehaviour
         }
 
         print("DAMAGE : " + damage);
+
+		// Application des dommages
+		other.SetDamage(damage);
+
         return damage;
     }
 }

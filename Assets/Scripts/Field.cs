@@ -23,6 +23,7 @@ public class Field : MonoBehaviour
 
 		Generate();
 
+		GameManager.Instance.currentTeamTurn = Monster.Team.A;
 		GameManager.Instance.LaunchLevel();
 	}
 	
@@ -42,6 +43,33 @@ public class Field : MonoBehaviour
             squareGo.transform.parent = this.transform.parent;
 			squareGo.name = "Square_" + squareCounter++;
 			ListSquaresGo.Add(squareGo);
+		}
+	}
+
+	public void CheckEnnemiesPosition()
+	{
+		Monster currentMonster = ListMonsters.Where(lm => (lm.whichTeam.Equals(GameManager.Instance.currenTeamTurn) && (lm.isSelected == true))).FirstOrDefault();
+
+		if(currentMonster != null)
+		{
+			List<Monster> localEnnemies = ListMonsters.Where(lm => (
+																	!(lm.whichTeam.Equals(currentMonster.whichTeam)) 
+																	&& ((lm.currentSquare.PositionX == currentMonster.currentSquare.PositionX + 1 && lm.currentSquare.PositionZ == currentMonster.currentSquare.PositionZ) 
+																		|| (lm.currentSquare.PositionX == currentMonster.currentSquare.PositionX - 1 && lm.currentSquare.PositionZ == currentMonster.currentSquare.PositionZ) 
+																		|| (lm.currentSquare.PositionX == currentMonster.currentSquare.PositionX && lm.currentSquare.PositionZ == currentMonster.currentSquare.PositionZ + 1) 
+																		|| (lm.currentSquare.PositionX == currentMonster.currentSquare.PositionX && lm.currentSquare.PositionZ == currentMonster.currentSquare.PositionZ - 1) 
+			    											))).ToList();
+			if(localEnnemies.Count() == 1)
+			{
+				currentMonster.LaunchAttack(localEnnemies[0]);
+			}
+			else if(localEnnemies.Count() > 1)
+			{
+				int index = Random.Range(0, localEnnemies.Count());
+
+				currentMonster.LaunchAttack(localEnnemies[index]);
+			}
+
 		}
 	}
 
