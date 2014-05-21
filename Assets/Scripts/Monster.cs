@@ -24,7 +24,7 @@ public enum Shield
 public enum Movement
 {
 	Horizontal,
-	Vertcal
+	Vertical
 };
 
 public enum Team
@@ -45,11 +45,11 @@ public struct DefensePattern
     public int power;
 }
 
-public class Monster : MonoBehaviour
+public class Monster
 {
 
-	int _level;
-	int _pv;
+	public int level;
+	public int pv;
     public List<AttackPattern> listAttackPatterns;
     public List<DefensePattern> listDefensePatterns;
 	public List<Movement> listMovements;
@@ -60,6 +60,8 @@ public class Monster : MonoBehaviour
 
     public bool isSelected;
     public Team whicTeam;
+
+
 
 	// Use this for initialization
 	void Start ()
@@ -100,7 +102,7 @@ public class Monster : MonoBehaviour
             damage = (atkPattern.power - defPower < 0) ? 0 : Mathf.CeilToInt(atkPattern.power - defPower);
         }
 
-        print("DAMAGE : " + damage);
+        MonoBehaviour.print("DAMAGE : " + damage);
         return damage;
     }
 }
