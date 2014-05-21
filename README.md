@@ -20,3 +20,7 @@ Convention de Nomage:
 			- Autres : nom de classe explicite (les mettres dans le dossier Scripts)
 			
 	
+ - Scenes :
+	Creer un gameOject empty s'appellant "SceneNomDeScene et mettre les éléments dedans
+	Le nom des élements commence par une Majucule et doit être explicite ^_^
+	
