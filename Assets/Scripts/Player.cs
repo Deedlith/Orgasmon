@@ -65,11 +65,11 @@ public class Player : MonoBehaviour {
 		List<Movement> listMovements = monster.listMovements;
 
 		foreach (Movement movement in listMovements) {
-			StartCoroutine(MoveMonsterOneSquare(0.5f, movement, monsterGO));		
+			//StartCoroutine(MoveMonsterOneSquare(0.5f, movement, monsterGO));		
 		}
 	}
 
-	IEnumerator MoveMonsterOneSquare(float delayTime, GameObject monster, Movement movement)
+	/*IEnumerator MoveMonsterOneSquare(float delayTime, GameObject monster, Movement movement)
 	{
 		print ("Moving monster...");
 		
@@ -83,7 +83,7 @@ public class Player : MonoBehaviour {
 			monster.transform.position = Vector3.Lerp(end_position, start_position, Time.time-startTime); // lerp from A to B in one second
 			yield return 1; // wait for next frame
 		}
-	}
+	}*/
 
 	bool CanMove(int x, int z)
 	{
