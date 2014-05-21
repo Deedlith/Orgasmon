@@ -103,6 +103,7 @@ public class Monster
         }
 
         other.pv -= damage;
+
         return damage;
     }
 }
