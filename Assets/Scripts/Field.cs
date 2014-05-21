@@ -46,7 +46,7 @@ public class Field : MonoBehaviour
             m.listAttackPatterns = new List<AttackPattern>();
             AttackPattern attack = new AttackPattern();
             attack.atk = Attack.Arms;
-            attack.power = m.level * 2;
+            attack.power = m.level * 3;
             m.listAttackPatterns.Add(attack);
             // Defense Pattern
             m.listDefensePatterns = new List<DefensePattern>();
@@ -95,7 +95,7 @@ public class Field : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A))
         {
             var monster = ListMonsters.Where(m => m.isSelected == true).First();
-            GameObject go = GetGoFromMonster(monster);
+            GameObject go = ListMonstersGo.Where(g => g.transform.position.z != 0 && g.transform.position.z != 9).First(); 
             monster.currentSquare = ListSquares.Where(s =>
                 s.PositionX == Mathf.RoundToInt(go.transform.position.x)
                 &&
@@ -143,9 +143,7 @@ public class Field : MonoBehaviour
         }
 
         var t = ListMonsters.ElementAt(8);
-        print("TEAM : " + t.whichTeam.ToString());
         t.isSelected = true;
-        print(ListMonstersGo[0].transform.position);
 	}
 
 	public void CheckEnnemiesPosition()
@@ -182,8 +180,12 @@ public class Field : MonoBehaviour
                     &&
                     Mathf.RoundToInt(m.transform.position.z) == localEnnemies[index].currentSquare.PositionZ).First();
                 print(go.name + " IS DEAD !");
+                ListMonsters.Remove(localEnnemies[index]);
+                ListMonstersGo.Remove(go);
                 Destroy(go);
+                ListMonsters.Remove(localEnnemies[index]);
                 bool victory = CheckVictory();
+                print("End Check Victory");
                 if (victory)
                     print("TEAM " + GameManager.Instance.currentTeamTurn.ToString() + " HAS WIN !");
             }
@@ -193,6 +195,7 @@ public class Field : MonoBehaviour
 
     public bool CheckVictory()
     {
+        print("Check Victory");
         return (ListMonsters.Where(m => m.whichTeam == Team.A).Count() == 0 || ListMonsters.Where(m => m.whichTeam == Team.B).Count() == 0);
     }
 
