@@ -159,7 +159,7 @@ public class Field : MonoBehaviour
             }
         }
 
-        print("Monsters select is " + monster1.level + " _ " + monster2.level);
+        //print("Monsters select is " + monster1.level + " _ " + monster2.level);
 
         //Create New Monster and Destroy old
         int level,speed,pv;
@@ -199,7 +199,6 @@ public class Field : MonoBehaviour
             listAttackPatterns = monster1.listAttackPatterns;
             for (int i = 0; i < monster2.listDefensePatterns.Count; i++)
             {
-                Debug.Log(monster2.listDefensePatterns.ElementAt(i));
                 DefensePattern def = monster2.listDefensePatterns.ElementAt(i);
                 def.power += 2;
                 listDefensePatterns.Add(def);
