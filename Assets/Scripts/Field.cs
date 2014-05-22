@@ -29,6 +29,7 @@ public class Field : MonoBehaviour
 	public List<Monster> ListMonsters = new List<Monster>();
     public List<GameObject> ListMonstersGo = new List<GameObject>();
     public List<GameObject> ListMonstersGoPlayer = new List<GameObject>();
+    public Dictionary<GameObject, Monster> dicoMonsterGOMonster = new Dictionary<GameObject, Monster>();
 	
 	void Start () {
 		for(int i = 0; i < 10; i++)
@@ -40,58 +41,111 @@ public class Field : MonoBehaviour
 			}
 		}
 
-        for (int i = 0; i < 5; i++)
+        /*for (int i = 0; i < 5; i++)
         {
-            Monster m = new Monster();
-            m.level = i + 1;
-            m.pv = 2 * m.level;
+            
             // Attack Pattern
-            m.listAttackPatterns = new List<AttackPattern>();
+            List<AttackPattern> listAttackPatterns = new List<AttackPattern>();
             AttackPattern attack = new AttackPattern();
             attack.atk = Attack.Arms;
-            attack.power = m.level * 3;
-            m.listAttackPatterns.Add(attack);
+            attack.power = (i + 1) * 3;
+            listAttackPatterns.Add(attack);
             // Defense Pattern
-            m.listDefensePatterns = new List<DefensePattern>();
+            List<DefensePattern> listDefensePatterns = new List<DefensePattern>();
             DefensePattern defense = new DefensePattern();
             defense.def = Shield.Arms;
-            defense.power = m.level * 2;
-            m.listDefensePatterns.Add(defense);
+            defense.power = (i + 1) * 2;
+            listDefensePatterns.Add(defense);
             // Movement Pattern
-            m.listMovements = new List<Movement>();
-            m.listMovements.Add(Movement.Vertical);
-            m.speed = m.level * 3;
-            m.whichTeam = Team.A;
+            List<Movement> listMovements = new List<Movement>();
+            listMovements.Add(Movement.Vertical);
+            Monster m = new Monster(Team.A, listAttackPatterns, listDefensePatterns, listMovements, (i + 1), ((i + 1) * 3), 2 * (i+1));
             ListMonsters.Add(m);
 
-            m = new Monster();
-            m.level = i + 1;
+
+
             // Attack Pattern
-            m.listAttackPatterns = new List<AttackPattern>();
+            listAttackPatterns = new List<AttackPattern>();
             attack = new AttackPattern();
             attack.atk = Attack.Arms;
-            attack.power = m.level * 2;
-            m.listAttackPatterns.Add(attack);
+            attack.power = (i + 1) * 3;
+            listAttackPatterns.Add(attack);
             // Defense Pattern
-            m.listDefensePatterns = new List<DefensePattern>();
+            listDefensePatterns = new List<DefensePattern>();
             defense = new DefensePattern();
             defense.def = Shield.Arms;
-            defense.power = m.level * 2;
-            m.listDefensePatterns.Add(defense);
+            defense.power = (i + 1) * 2;
+            listDefensePatterns.Add(defense);
             // Movement Pattern
-            m.listMovements = new List<Movement>();
-            m.listMovements.Add(Movement.Vertical);
-            m.pv = 2 * m.level;
-            m.speed = m.level * 3;
-            m.whichTeam = Team.B;
+            listMovements = new List<Movement>();
+            listMovements.Add(Movement.Vertical);
+            m = new Monster(Team.B, listAttackPatterns, listDefensePatterns, listMovements, (i + 1), ((i + 1) * 3), 2 * (i + 1));
             ListMonsters.Add(m);
-        }
+        }*/
 
-		Generate();
-        sceneInGameCtrl.InitGame(ListMonstersGoPlayer);
+		//Generate();
+        sceneInGameCtrl.InitGame();
 		GameManager.Instance.currentTeamTurn = Team.A;
 	}
-	
+
+    public void CreateMonsters()
+    {
+         int posX = -4, posY = 2, posZ = 4;
+         for (int i = 0; i < 5; i++)
+         {
+             // Attack Pattern
+             List<AttackPattern> listAttackPatterns = new List<AttackPattern>();
+             AttackPattern attack = new AttackPattern();
+             attack.atk = Attack.Arms;
+             attack.power = (i + 1) * 3;
+             listAttackPatterns.Add(attack);
+             // Defense Pattern
+             List<DefensePattern> listDefensePatterns = new List<DefensePattern>();
+             DefensePattern defense = new DefensePattern();
+             defense.def = Shield.Arms;
+             defense.power = (i + 1) * 2;
+             listDefensePatterns.Add(defense);
+             // Movement Pattern
+             List<Movement> listMovements = new List<Movement>();
+             listMovements.Add(Movement.Vertical);
+             Monster m = new Monster(Team.A, listAttackPatterns, listDefensePatterns, listMovements, (i + 1), ((i + 1) * 3), 2 * (i + 1));
+             ListMonsters.Add(m);
+
+             //Pour TeamA
+             Vector3 pos = new Vector3(posX, posY, posZ);
+
+             GameObject AllMonstersGo = (GameObject)Instantiate(Resources.Load("Prefabs/Prefab_MonsterInfos"), pos, Quaternion.identity);
+             GameObject monsterGo = AllMonstersGo.transform.FindChild("Monster").gameObject;
+
+             dicoMonsterGOMonster.Add(monsterGo, m);
+             m.Infos(AllMonstersGo.transform.FindChild("InfosMonsters").gameObject.transform.GetComponent<TextMesh>());
+             AllMonstersGo.name = "MonstersInfos_" + m.whichTeam.ToString() + i;
+             AllMonstersGo.transform.parent = parent.transform;
+
+             monsterGo.name = "Monster" + m.whichTeam.ToString() + "_" + i;
+             m.isSelected = false;
+             posX += 2;
+
+             listAttackPatterns = new List<AttackPattern>();
+             attack = new AttackPattern();
+             attack.atk = Attack.Arms;
+             attack.power = (i + 1) * 3;
+             listAttackPatterns.Add(attack);
+             // Defense Pattern
+             listDefensePatterns = new List<DefensePattern>();
+             defense = new DefensePattern();
+             defense.def = Shield.Arms;
+             defense.power = (i + 1) * 2;
+             listDefensePatterns.Add(defense);
+             // Movement Pattern
+             listMovements = new List<Movement>();
+             listMovements.Add(Movement.Vertical);
+             m = new Monster(Team.B, listAttackPatterns, listDefensePatterns, listMovements, (i + 1), ((i + 1) * 3), 2 * (i + 1));
+             ListMonsters.Add(m);
+
+
+         }
+    }
 	// Update is called once per frame
 	void Update () {
         if (Input.GetKeyDown(KeyCode.A))
@@ -106,7 +160,35 @@ public class Field : MonoBehaviour
             CheckEnnemiesPosition();
         }
 	}
-	
+
+    public void RegenerateMonster(Monster m, GameObject allMonster)
+    {
+        print(m.whichTeam + " - " + m.listAttackPatterns + " - " + m.listDefensePatterns + " - " + m.listMovements + " - " + m.level + " - " + m.speed + " - " + m.pv);
+        Monster mon = new Monster(m.whichTeam,m.listAttackPatterns,m.listDefensePatterns,m.listMovements,m.level,m.speed,m.pv);
+        mon.currentSquare = m.currentSquare;
+        mon.isSelected = false;
+        ListMonsters.Remove(m);
+        ListMonsters.Add(mon);
+
+        GameObject AllMonstersGo = (GameObject)Instantiate(Resources.Load("Prefabs/Prefab_MonsterInfos"), allMonster.transform.position, Quaternion.identity);
+        GameObject monsterGo = AllMonstersGo.transform.FindChild("Monster").gameObject;
+        mon.Infos(AllMonstersGo.transform.FindChild("InfosMonsters").gameObject.transform.GetComponent<TextMesh>());
+        AllMonstersGo.name = allMonster.name;
+        AllMonstersGo.transform.parent = allMonster.transform.parent;
+
+        monsterGo.name = allMonster.transform.GetChild(1).name;
+
+        if (mon.whichTeam == Team.A)
+        {
+            ListMonstersGoPlayer.Remove(allMonster);
+            ListMonstersGoPlayer.Add(AllMonstersGo);
+        }
+        ListMonstersGo.Remove(allMonster.transform.transform.GetChild(1).gameObject);
+        ListMonstersGo.Add(monsterGo);
+        Destroy(allMonster);
+    }
+
+
 	public void Generate()
 	{
 		int squareCounter = 0;
@@ -135,25 +217,35 @@ public class Field : MonoBehaviour
             }
             
             Vector3 pos = new Vector3(s.PositionX, 0.0f, s.PositionZ);
-
-            GameObject AllMonstersGo = (GameObject)Instantiate(Resources.Load("Prefabs/Prefab_MonsterInfos"), pos, Quaternion.identity);
-            GameObject monsterGo = AllMonstersGo.transform.FindChild("Monster").gameObject;
-            monster.Infos(AllMonstersGo.transform.FindChild("InfosMonsters").gameObject.transform.GetComponent<TextMesh>());
-            AllMonstersGo.name = "MonstersInfos_" + monsterCounter;
-            AllMonstersGo.transform.parent = parent.transform;
-
-            monsterGo.name = "Team" + monster.whichTeam.ToString() + "_" + monsterCounter++;
             monster.currentSquare = s;
-            monster.isSelected = false;
-            if (monster.whichTeam == Team.A)
-            {
-                ListMonstersGoPlayer.Add(AllMonstersGo);
-            }
-            ListMonstersGo.Add(monsterGo);
-        }
 
+
+            //Team.B a générer
+            if (monster.whichTeam != Team.A)
+            {
+                GameObject AllMonstersGo = (GameObject)Instantiate(Resources.Load("Prefabs/Prefab_MonsterInfos"), pos, Quaternion.identity);
+                GameObject monsterGo = AllMonstersGo.transform.FindChild("Monster").gameObject;
+
+                monster.Infos(AllMonstersGo.transform.FindChild("InfosMonsters").gameObject.transform.GetComponent<TextMesh>());
+
+                AllMonstersGo.name = "MonstersInfos_" + monster.whichTeam.ToString() + monsterCounter;
+                AllMonstersGo.transform.parent = parent.transform;
+
+                monster.isSelected = false;
+                monsterGo.name = "Monster" + monster.whichTeam.ToString() + "_" + monsterCounter++;
+                ListMonstersGo.Add(monsterGo);
+                dicoMonsterGOMonster.Add(monsterGo, monster);
+            }
+            else
+            {
+                GameObject myValue = dicoMonsterGOMonster.FirstOrDefault(x => x.Value == monster).Key;
+                myValue.transform.position = pos;
+            }
+            
+        }
+        /*
         var t = ListMonsters.ElementAt(8);
-        t.isSelected = true;
+        t.isSelected = true;*/
 	}
 
 	public void CheckEnnemiesPosition()

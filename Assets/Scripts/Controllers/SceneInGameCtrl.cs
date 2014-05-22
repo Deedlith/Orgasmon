@@ -8,7 +8,9 @@ public class SceneInGameCtrl : MonoBehaviour
     public GameObject pause;
     public GameObject rootInGame;
     public GameObject initGame;
-
+    GameObject monsterGo = null;
+    Monster monster;
+    static int nbMonsterSelected = 0;
     // Update is called once per frame
 
 
@@ -27,16 +29,13 @@ public class SceneInGameCtrl : MonoBehaviour
         rootInGame.SetActive(!GameManager.Instance.IsInPause);
     }
 
-    public void InitGame(List<GameObject> list)
+    public void InitGame()
     {
         initGame.SetActive(true);
         rootInGame.SetActive(false);
-        int posX = -4, posY = 2, posZ = 4;
-        foreach (GameObject m in list)
-        {
-            m.transform.position = new Vector3(posX, posY, posZ);
-            posX += 2;
-        }
+
+        Field.Instance.CreateMonsters();
+
     }
 
     void BindPause()
@@ -53,11 +52,13 @@ public class SceneInGameCtrl : MonoBehaviour
     void BindInit()
     {
         GameManager.Instance.Action1Pressed += InitGameAction;
+        GameManager.Instance.Action2Pressed += InitGameAction;
     }
 
     void UnBindInit()
     {
         GameManager.Instance.Action1Pressed -= InitGameAction;
+        GameManager.Instance.Action2Pressed -= InitGameAction;
     }
 
 
@@ -73,6 +74,11 @@ public class SceneInGameCtrl : MonoBehaviour
                 initGame.SetActive(false);
                 rootInGame.SetActive(true);
                 UnBindInit();
+                Field.Instance.Generate();
+            }
+            else if (objectHit.name.Equals("Regenerate") && nbMonsterSelected == 1)
+            {
+                Field.Instance.RegenerateMonster(monster,monsterGo.transform.parent.gameObject);
             }
         }
     }
@@ -93,6 +99,46 @@ public class SceneInGameCtrl : MonoBehaviour
             {
                 UnBindPause();
                 Application.LoadLevel("MainScene");
+            }
+        }
+    }
+
+    void Update()
+    {
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); ;
+
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.collider.name.Contains("MonsterA"))
+            {
+                monsterGo = hit.collider.gameObject;
+                monsterGo.transform.parent.transform.FindChild("InfosMonsters").gameObject.SetActive(true);
+                Field.Instance.dicoMonsterGOMonster.TryGetValue(monsterGo, out monster);
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if (nbMonsterSelected < 2)
+                    {
+                        monsterGo.transform.renderer.material.color = Color.red;
+                        monster.isSelected = true;
+                        nbMonsterSelected++;
+                    }
+                }
+                else if (Input.GetMouseButtonDown(1))
+                {
+                    monsterGo.transform.renderer.material.color = Color.white;
+                    monster.isSelected = false;
+                    nbMonsterSelected--;
+                    monsterGo = null;
+                }
+            }
+        }
+        else
+        {
+            if (monsterGo != null)
+            {
+                monsterGo.transform.parent.transform.FindChild("InfosMonsters").gameObject.SetActive(false);
             }
         }
     }

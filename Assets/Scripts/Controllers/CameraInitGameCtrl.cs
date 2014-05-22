@@ -11,7 +11,7 @@ public class CameraInitGameCtrl : MonoBehaviour {
 
     void Update()
     {
-        RaycastHit hit;
+       /* RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); ;
         Monster Monster;
         
@@ -38,6 +38,6 @@ public class CameraInitGameCtrl : MonoBehaviour {
             {
                 MonsterGo.transform.parent.transform.FindChild("InfosMonsters").gameObject.SetActive(false);
             }
-        }
+        }*/
     }
 }
