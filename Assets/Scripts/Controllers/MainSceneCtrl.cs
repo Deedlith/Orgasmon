@@ -7,13 +7,12 @@ public class MainSceneCtrl : MonoBehaviour {
 	void Start () {
         if (FindObjectsOfType(typeof(ControllerManager)).Length == 0)
         {
-            print("PROUT CACA");
             GameObject go = new GameObject();
             go.AddComponent<ControllerManager>();
             go.name = "InputManager";
         }
 
-        GameManager.Instance.MenuEvent += (bool isOnMenu) => { print("bouh"); if (isOnMenu)Bind(); else UnBind(); };
+        GameManager.Instance.MenuEvent += (bool isOnMenu) => {if (isOnMenu)Bind(); else UnBind(); };
         GameManager.Instance.LaunchMenu();
 	}
 

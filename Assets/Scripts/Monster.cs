@@ -75,6 +75,11 @@ public class Monster
 	
 	}
 
+    public void Infos(TextMesh text)
+    {
+        text.text = "Level: " + level + "\nPV: " + pv + "\nSpeed: " + speed + "\nOverall: " + overall;
+    }
+
     public int LaunchAttack(Monster other)
     {
         // Sélectionner un pattern d'attaque

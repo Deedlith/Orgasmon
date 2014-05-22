@@ -5,6 +5,8 @@ using System.Linq;
 
 public class Field : MonoBehaviour
 {
+    public SceneInGameCtrl sceneInGameCtrl;
+    public GameObject parent;
     #region SINGLETON
     private static Field _instance = null;
 
@@ -26,6 +28,7 @@ public class Field : MonoBehaviour
 	public List<GameObject> ListSquaresGo = new List<GameObject>();
 	public List<Monster> ListMonsters = new List<Monster>();
     public List<GameObject> ListMonstersGo = new List<GameObject>();
+    public List<GameObject> ListMonstersGoPlayer = new List<GameObject>();
 	
 	void Start () {
 		for(int i = 0; i < 10; i++)
@@ -85,9 +88,8 @@ public class Field : MonoBehaviour
         }
 
 		Generate();
-
+        sceneInGameCtrl.InitGame(ListMonstersGoPlayer);
 		GameManager.Instance.currentTeamTurn = Team.A;
-		GameManager.Instance.LaunchLevel();
 	}
 	
 	// Update is called once per frame
@@ -134,11 +136,19 @@ public class Field : MonoBehaviour
             
             Vector3 pos = new Vector3(s.PositionX, 0.0f, s.PositionZ);
 
-            GameObject monsterGo = (GameObject)Instantiate(Resources.Load("Prefabs/Prefab_Monster"), pos, Quaternion.identity);
-            monsterGo.transform.parent = this.transform.parent;
+            GameObject AllMonstersGo = (GameObject)Instantiate(Resources.Load("Prefabs/Prefab_MonsterInfos"), pos, Quaternion.identity);
+            GameObject monsterGo = AllMonstersGo.transform.FindChild("Monster").gameObject;
+            monster.Infos(AllMonstersGo.transform.FindChild("InfosMonsters").gameObject.transform.GetComponent<TextMesh>());
+            AllMonstersGo.name = "MonstersInfos_" + monsterCounter;
+            AllMonstersGo.transform.parent = parent.transform;
+
             monsterGo.name = "Team" + monster.whichTeam.ToString() + "_" + monsterCounter++;
             monster.currentSquare = s;
             monster.isSelected = false;
+            if (monster.whichTeam == Team.A)
+            {
+                ListMonstersGoPlayer.Add(AllMonstersGo);
+            }
             ListMonstersGo.Add(monsterGo);
         }
 
@@ -203,8 +213,8 @@ public class Field : MonoBehaviour
     {
 		foreach (Monster m in ListMonsters)
 		{
-			print ("mx : " + m.currentSquare.PositionX + ", mz : " + m.currentSquare.PositionZ);
-			print ("gox : " + Mathf.RoundToInt(go.transform.position.x) + ", goz : " + Mathf.RoundToInt(go.transform.position.z));
+			//print ("mx : " + m.currentSquare.PositionX + ", mz : " + m.currentSquare.PositionZ);
+			//print ("gox : " + Mathf.RoundToInt(go.transform.position.x) + ", goz : " + Mathf.RoundToInt(go.transform.position.z));
 
 			if(m.currentSquare.PositionX == Mathf.RoundToInt(go.transform.position.x)
 			   && m.currentSquare.PositionZ == Mathf.RoundToInt(go.transform.position.z))
