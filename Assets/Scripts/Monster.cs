@@ -59,7 +59,6 @@ public class Monster
 	public Square currentSquare = null;
 
     public bool isSelected;
-<<<<<<< HEAD
     public Team whichTeam;
 
     public Monster()
@@ -100,9 +99,7 @@ public class Monster
     {
 	
 	}
-=======
-	public Team whichTeam;
->>>>>>> 691f04c3c614d26f9c5869beb9eb420650835537
+
 
     public void Infos(TextMesh text)
     {

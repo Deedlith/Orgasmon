@@ -74,6 +74,7 @@ public class SceneInGameCtrl : MonoBehaviour
                 rootInGame.SetActive(true);
                 UnBindInit();
                 Field.Instance.Generate();
+                GameManager.Instance.LaunchLevel();
             }
             else if (objectHit.name.Equals("Regenerate") && nbMonsterSelected == 1 && monster!= null)
             {

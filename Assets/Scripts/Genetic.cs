@@ -67,7 +67,7 @@ public class Genetic
 
 	public int Evaluate()
 	{
-
+        return 0;
 	}
 
 	public void DisplayPopulation()

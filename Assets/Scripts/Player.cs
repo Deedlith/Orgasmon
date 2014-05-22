@@ -45,13 +45,13 @@ public class Player : MonoBehaviour {
 		if(Physics.Raycast(ray, out hit, 1000)) 
 		{
 			GameObject objectHit = hit.collider.gameObject;
-			if(objectHit.name.Substring(0, 6).Equals("Square"))
+			if(objectHit.name.Contains("Square"))
 			{
 				print ("SQUARE SELECTED : " + objectHit.name);
 			
 				MoveMonster(_currentMonster, _currentMonsterGO);
 			}
-			else if(objectHit.name.Substring(0, 5).Equals("TeamA"))
+            else if (objectHit.name.Contains("A"))
 			{
 				print ("MONSTER SELECTED : " + objectHit.name);
 
