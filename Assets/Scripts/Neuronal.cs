@@ -5,7 +5,7 @@ using System.Linq;
 
 public class Neuronal 
 {
-	List<List<Movement>> _inputs;
+	/*List<List<Movement>> _inputs;
 	List<List<Movement>> _targets;
 
 	int _ni = 0;
@@ -190,13 +190,13 @@ public class Neuronal
 		return error;
 	}
 
-	/*public void Test(List<List<Movement>> inputs)
+	public void Test(List<List<Movement>> inputs)
 	{
 		foreach(List<Movement> lm in inputs)
 		{
 			MonoBehaviour.print(
 		}
-	}*/
+	}
 
 	public void Weights()
 	{
@@ -224,5 +224,5 @@ public class Neuronal
 
 			}
 		}
-	}
+	}*/
 }
