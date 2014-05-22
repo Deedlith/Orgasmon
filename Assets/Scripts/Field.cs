@@ -203,8 +203,8 @@ public class Field : MonoBehaviour
     {
 		foreach (Monster m in ListMonsters)
 		{
-			print ("mx : " + m.currentSquare.PositionX + ", mz : " + m.currentSquare.PositionZ);
-			print ("gox : " + Mathf.RoundToInt(go.transform.position.x) + ", goz : " + Mathf.RoundToInt(go.transform.position.z));
+			//print ("mx : " + m.currentSquare.PositionX + ", mz : " + m.currentSquare.PositionZ);
+			//print ("gox : " + Mathf.RoundToInt(go.transform.position.x) + ", goz : " + Mathf.RoundToInt(go.transform.position.z));
 
 			if(m.currentSquare.PositionX == Mathf.RoundToInt(go.transform.position.x)
 			   && m.currentSquare.PositionZ == Mathf.RoundToInt(go.transform.position.z))

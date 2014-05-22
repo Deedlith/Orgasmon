@@ -6,6 +6,8 @@ using System.Linq;
 public class Player : MonoBehaviour {
 
 	string _monsterSelected; // monster currently selected by player
+	GameObject _currentMonsterGO;
+	Monster _currentMonster;
 
 	void Awake()
 	{
@@ -16,7 +18,7 @@ public class Player : MonoBehaviour {
 	void Start () {
 		GameManager.Instance.LevelEvent += (bool isOnLevel) => { if(isOnLevel == true) BindMove(); else UnbindMove(); };
 	}
-	
+
 	void BindMove()
 	{
 		GameManager.Instance.Action1Pressed += MoveAction;
@@ -46,24 +48,29 @@ public class Player : MonoBehaviour {
 			if(objectHit.name.Substring(0, 6).Equals("Square"))
 			{
 				print ("SQUARE SELECTED : " + objectHit.name);
-
-				GameObject currentMonsterGO = GameObject.Find(_monsterSelected);
-				Monster currentMonster = Field.Instance.GetMonsterFromGo(currentMonsterGO);
-				MoveMonster(currentMonster, currentMonsterGO);
+			
+				MoveMonster(_currentMonster, _currentMonsterGO);
 			}
 			else if(objectHit.name.Substring(0, 5).Equals("TeamA"))
 			{
 				print ("MONSTER SELECTED : " + objectHit.name);
-				StopAllCoroutines();
+
 				_monsterSelected = objectHit.name;
+				_currentMonsterGO = GameObject.Find(_monsterSelected);
+				_currentMonster = Field.Instance.GetMonsterFromGo(_currentMonsterGO);
 			}
 		}
 	}
 
 	void MoveMonster(Monster monster, GameObject monsterGO)
 	{
+		monster.listMovements.Add (Movement.Horizontal);
+		monster.listMovements.Add (Movement.Vertical);
+		monster.listMovements.Add (Movement.Horizontal);
+		monster.listMovements.Add (Movement.Vertical);
 		foreach (Movement movement in monster.listMovements)
 		{
+			// Pas possible d'enchainer les mouvements avec une coroutine TTT_TTT
 			StartCoroutine(MoveMonsterOneSquare(0.5f, monsterGO, movement));		
 		}
 	}
@@ -93,19 +100,5 @@ public class Player : MonoBehaviour {
 	bool CanMove(int x, int z)
 	{
 		return true;
-		/*if (onDice == false)
-			return false;
-		
-		var nextSquare = Level.Instance._field.ListSquares.Where(s => s.PositionX == x && s.PositionZ == z).FirstOrDefault();
-		
-		if(nextSquare == null || !nextSquare.SquareIsExisting())
-		{
-			return false;
-		}
-		
-		if(this.onDice.actualSquare != nextSquare)
-			return false;
-		
-		return true;*/
 	}
 }
