@@ -116,6 +116,12 @@ public class Field : MonoBehaviour
             print(monster.currentSquare.PositionX);
             CheckEnnemiesPosition();
         }
+
+		if (Input.GetKeyDown(KeyCode.G))
+		{
+			Genetic.Instance.GeneratePopulation();
+			Genetic.Instance.DisplayPopulation();
+		}
 	}
 
     //Regenerate another monster
