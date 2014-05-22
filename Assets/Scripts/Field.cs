@@ -14,7 +14,7 @@ public class Field : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = new Field();
+                _instance = GameObject.FindObjectOfType<Field>().GetComponent<Field>();
             }
 
             return _instance;
@@ -201,10 +201,19 @@ public class Field : MonoBehaviour
 
     public Monster GetMonsterFromGo(GameObject go)
     {
-        return ListMonsters.Where(m =>
-                    m.currentSquare.PositionX == Mathf.RoundToInt(go.transform.position.x)
-                    &&
-                    m.currentSquare.PositionZ == Mathf.RoundToInt(go.transform.position.z)).First();
+		foreach (Monster m in ListMonsters)
+		{
+			print ("mx : " + m.currentSquare.PositionX + ", mz : " + m.currentSquare.PositionZ);
+			print ("gox : " + Mathf.RoundToInt(go.transform.position.x) + ", goz : " + Mathf.RoundToInt(go.transform.position.z));
+
+			if(m.currentSquare.PositionX == Mathf.RoundToInt(go.transform.position.x)
+			   && m.currentSquare.PositionZ == Mathf.RoundToInt(go.transform.position.z))
+			{
+				return m;
+			}
+		}
+
+		return null;
     }
 
     public GameObject GetGoFromMonster(Monster m)

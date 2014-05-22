@@ -54,7 +54,7 @@ public class Player : MonoBehaviour {
 			else if(objectHit.name.Substring(0, 5).Equals("TeamA"))
 			{
 				print ("MONSTER SELECTED : " + objectHit.name);
-				//StopAllCoroutines();
+				StopAllCoroutines();
 				_monsterSelected = objectHit.name;
 			}
 		}
@@ -62,28 +62,33 @@ public class Player : MonoBehaviour {
 
 	void MoveMonster(Monster monster, GameObject monsterGO)
 	{
-		List<Movement> listMovements = monster.listMovements;
-
-		foreach (Movement movement in listMovements) {
-			//StartCoroutine(MoveMonsterOneSquare(0.5f, movement, monsterGO));		
+		foreach (Movement movement in monster.listMovements)
+		{
+			StartCoroutine(MoveMonsterOneSquare(0.5f, monsterGO, movement));		
 		}
 	}
 
-	/*IEnumerator MoveMonsterOneSquare(float delayTime, GameObject monster, Movement movement)
+	IEnumerator MoveMonsterOneSquare(float delayTime, GameObject monsterGO, Movement movement)
 	{
 		print ("Moving monster...");
 		
-		Vector3 start_position = monster.transform.position;
-		Vector3 end_position = new Vector3 (start_position.x, start_position.y, start_position.z++);
+		Vector3 start_position = monsterGO.transform.position;
+		Vector3 end_position = monsterGO.transform.position;
+
+		if (movement == Movement.Vertical)
+			end_position = new Vector3 (start_position.x, start_position.y, start_position.z++);
+
+		if (movement == Movement.Horizontal)
+			end_position = new Vector3 (start_position.x++, start_position.y, start_position.z);
 		
 		yield return new WaitForSeconds(delayTime);
 		float startTime = Time.time; // Time.time contains current frame time, so remember starting point
 		while (Time.time-startTime <= 1)
 		{
-			monster.transform.position = Vector3.Lerp(end_position, start_position, Time.time-startTime); // lerp from A to B in one second
+			monsterGO.transform.position = Vector3.Lerp(end_position, start_position, Time.time-startTime); // lerp from A to B in one second
 			yield return 1; // wait for next frame
 		}
-	}*/
+	}
 
 	bool CanMove(int x, int z)
 	{
