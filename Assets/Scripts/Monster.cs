@@ -59,21 +59,7 @@ public class Monster
 	public Square currentSquare = null;
 
     public bool isSelected;
-    public Team whichTeam;
-
-
-
-	// Use this for initialization
-	void Start ()
-    {
-	
-	}
-	
-	// Update is called once per frame
-	void Update ()
-    {
-	
-	}
+	public Team whichTeam;
 
     public int LaunchAttack(Monster other)
     {
