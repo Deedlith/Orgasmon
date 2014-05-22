@@ -11,7 +11,6 @@ public class MainSceneCtrl : MonoBehaviour {
             go.AddComponent<ControllerManager>();
             go.name = "InputManager";
         }
-
         GameManager.Instance.MenuEvent += (bool isOnMenu) => {if (isOnMenu)Bind(); else UnBind(); };
         GameManager.Instance.LaunchMenu();
 	}
@@ -29,10 +28,11 @@ public class MainSceneCtrl : MonoBehaviour {
     void PauseAction()
     {
         RaycastHit hit = new RaycastHit();
+        GameObject objectHit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit, 1000))
         {
-            GameObject objectHit = hit.collider.gameObject;
+            objectHit = hit.collider.gameObject;
             if (objectHit.name.Equals("Play"))
             {
                 Application.LoadLevel("SceneInGame");

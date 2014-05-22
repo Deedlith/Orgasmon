@@ -33,9 +33,7 @@ public class SceneInGameCtrl : MonoBehaviour
     {
         initGame.SetActive(true);
         rootInGame.SetActive(false);
-
         Field.Instance.CreateMonsters();
-
     }
 
     void BindPause()
@@ -65,55 +63,32 @@ public class SceneInGameCtrl : MonoBehaviour
     void InitGameAction()
     {
         RaycastHit hit = new RaycastHit();
+        GameObject objectHit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit, 1000))
         {
-            GameObject objectHit = hit.collider.gameObject;
-            if (objectHit.name.Equals("Play2"))
+            objectHit = hit.collider.gameObject;
+            if (objectHit.name.Equals("PlayGame"))
             {
                 initGame.SetActive(false);
                 rootInGame.SetActive(true);
                 UnBindInit();
                 Field.Instance.Generate();
             }
-            else if (objectHit.name.Equals("Regenerate") && nbMonsterSelected == 1)
+            else if (objectHit.name.Equals("Regenerate") && nbMonsterSelected == 1 && monster!= null)
             {
+                nbMonsterSelected = 0;
                 Field.Instance.RegenerateMonster(monster,monsterGo.transform.parent.gameObject);
             }
-        }
-    }
-
-    void PauseAction()
-    {
-        RaycastHit hit = new RaycastHit();
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit, 1000))
-        {
-            GameObject objectHit = hit.collider.gameObject;
-            if (objectHit.name.Equals("Return"))
+            else if (objectHit.name.Equals("Fusion") && nbMonsterSelected == 2)
             {
-                pause.SetActive(false);
-                rootInGame.SetActive(true);
+                nbMonsterSelected = 0;
+                Field.Instance.Fusion();
             }
-            else if (objectHit.name.Equals("BackMainMenu"))
+
+            else if (objectHit.name.Contains("Monster_A"))
             {
-                UnBindPause();
-                Application.LoadLevel("MainScene");
-            }
-        }
-    }
-
-    void Update()
-    {
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); ;
-
-
-        if (Physics.Raycast(ray, out hit))
-        {
-            if (hit.collider.name.Contains("MonsterA"))
-            {
-                monsterGo = hit.collider.gameObject;
+                monsterGo = objectHit.gameObject;
                 monsterGo.transform.parent.transform.FindChild("InfosMonsters").gameObject.SetActive(true);
                 Field.Instance.dicoMonsterGOMonster.TryGetValue(monsterGo, out monster);
                 if (Input.GetMouseButtonDown(0))
@@ -139,6 +114,27 @@ public class SceneInGameCtrl : MonoBehaviour
             if (monsterGo != null)
             {
                 monsterGo.transform.parent.transform.FindChild("InfosMonsters").gameObject.SetActive(false);
+            }
+        }
+    }
+
+    void PauseAction()
+    {
+        RaycastHit hit = new RaycastHit();
+        GameObject objectHit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out hit, 1000))
+        {
+            objectHit = hit.collider.gameObject;
+            if (objectHit.name.Equals("Return"))
+            {
+                pause.SetActive(false);
+                rootInGame.SetActive(true);
+            }
+            else if (objectHit.name.Equals("BackMainMenu"))
+            {
+                UnBindPause();
+                Application.LoadLevel("MainScene");
             }
         }
     }

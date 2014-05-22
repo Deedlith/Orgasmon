@@ -61,6 +61,10 @@ public class Monster
     public bool isSelected;
     public Team whichTeam;
 
+    public Monster()
+    {
+    }
+
     public Monster(Team whichT, List<AttackPattern> listAttPat, List<DefensePattern> listDefPat, List<Movement> listMov,int l = 0, int s = 0, int pv2 = 0)
     {
         level = l;
