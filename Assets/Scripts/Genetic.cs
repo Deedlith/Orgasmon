@@ -90,6 +90,7 @@ public class Genetic
 
 	public List<Neuronal> GeneratePopulation(int mutation = 1)
 	{
+<<<<<<< HEAD
 		List<Neuronal> population = new List<Neuronal>();
 
 		for(int i = 0; i < _populationLength; i++)
@@ -134,6 +135,9 @@ public class Genetic
 		}
 
 		return population;
+=======
+        return 0;
+>>>>>>> FETCH_HEAD
 	}
 
 	public int Evaluate(List<Movement> pattern)
