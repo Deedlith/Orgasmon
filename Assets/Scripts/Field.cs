@@ -246,6 +246,7 @@ public class Field : MonoBehaviour
         Destroy(GoM2.transform.parent.gameObject);
     }
 
+
 	public void Generate()
 	{
 		int squareCounter = 0;

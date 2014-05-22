@@ -85,10 +85,9 @@ public class SceneInGameCtrl : MonoBehaviour
                 nbMonsterSelected = 0;
                 Field.Instance.Fusion();
             }
-
-            else if (objectHit.name.Contains("Monster_A"))
+            else if (hit.collider.name.Contains("Monster_A"))
             {
-                monsterGo = objectHit.gameObject;
+                monsterGo = hit.collider.gameObject;
                 monsterGo.transform.parent.transform.FindChild("InfosMonsters").gameObject.SetActive(true);
                 Field.Instance.dicoMonsterGOMonster.TryGetValue(monsterGo, out monster);
                 if (Input.GetMouseButtonDown(0))
@@ -121,11 +120,10 @@ public class SceneInGameCtrl : MonoBehaviour
     void PauseAction()
     {
         RaycastHit hit = new RaycastHit();
-        GameObject objectHit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit, 1000))
         {
-            objectHit = hit.collider.gameObject;
+            GameObject objectHit = hit.collider.gameObject;
             if (objectHit.name.Equals("Return"))
             {
                 pause.SetActive(false);
@@ -133,7 +131,7 @@ public class SceneInGameCtrl : MonoBehaviour
             }
             else if (objectHit.name.Equals("BackMainMenu"))
             {
-                UnBindPause();
+                nbMonsterSelected = 0;
                 Application.LoadLevel("MainScene");
             }
         }
