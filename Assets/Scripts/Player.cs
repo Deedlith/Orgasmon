@@ -9,6 +9,9 @@ public class Player : MonoBehaviour {
 	GameObject _currentMonsterGO;
 	Monster _currentMonster;
 
+    float duration= 0.9f; // duration of movement in seconds
+    bool moving= false; // flag to indicate it's moving
+
 	void Awake()
 	{
 
@@ -45,11 +48,14 @@ public class Player : MonoBehaviour {
 		if(Physics.Raycast(ray, out hit, 1000)) 
 		{
 			GameObject objectHit = hit.collider.gameObject;
-			if(objectHit.name.Contains("Square"))
+            if (objectHit.name.Contains("Square") && _currentMonsterGO != null)
 			{
 				print ("SQUARE SELECTED : " + objectHit.name);
-			
-				MoveMonster(_currentMonster, _currentMonsterGO);
+                StartCoroutine(MoveMonster(_currentMonsterGO, objectHit));
+                _currentMonster = null;
+                _currentMonsterGO = null;
+                _monsterSelected = null;
+				//MoveMonster(_currentMonster, _currentMonsterGO);
 			}
             else if (objectHit.name.Contains("A"))
 			{
@@ -62,7 +68,69 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	void MoveMonster(Monster monster, GameObject monsterGO)
+
+
+    IEnumerator MoveMonster(GameObject monsterGO,GameObject end)
+    {
+        if (moving) yield return new WaitForSeconds(0) ; 
+
+        float distanceX = end.transform.position.x - monsterGO.transform.position.x;
+        distanceX = Mathf.Sqrt(distanceX);
+
+        float distanceZ = end.transform.position.z - monsterGO.transform.position.z;
+        distanceZ = Mathf.Sqrt(distanceZ);
+
+        //print("monsterGO " + monsterGO.transform.position + " end " + end.transform.position);
+
+        Vector3 initPos = monsterGO.transform.position;
+        if (distanceX > distanceZ)
+        {
+            moving = true; 
+            var curPos = initPos;
+            var newPos = new Vector3(end.transform.position.x, 0, monsterGO.transform.position.z); 
+            for (float t = 0f; t < 1; )
+            {
+                t += Time.deltaTime / duration;
+                monsterGO.transform.position = Vector3.Lerp(curPos, newPos, t);
+                yield return new WaitForSeconds(0);
+            }
+            //print("INTER CHEMIN " + monsterGO.transform.position + " initPos " + initPos + " end " + end.transform.position);
+            monsterGO.transform.position = curPos = new Vector3(end.transform.position.x, 0, initPos.z);
+            newPos = new Vector3(end.transform.position.x, 0, end.transform.position.z); 
+
+            for (float t = 0f; t < 1; )
+            {
+                t += Time.deltaTime / duration;
+                monsterGO.transform.position = Vector3.Lerp(curPos, newPos, t); 
+                yield return new WaitForSeconds(0); 
+            }
+        }
+        else
+        {
+            moving = true;
+            var curPos = initPos;
+            var newPos = new Vector3(monsterGO.transform.position.x, 0, end.transform.position.z); 
+            for (float t = 0f; t < 1; )
+            {
+                t += Time.deltaTime / duration;
+                monsterGO.transform.position = Vector3.Lerp(curPos, newPos, t); 
+                yield return new WaitForSeconds(0); 
+            }
+            //print("INTER CHEMIN " + monsterGO.transform.position + " initPos " + initPos + " end " + end.transform.position);
+            curPos = new Vector3(initPos.x, 0, end.transform.position.z); 
+            newPos = new Vector3(end.transform.position.x, 0, end.transform.position.z); 
+
+            for (float t = 0f; t < 1; )
+            {
+                t += Time.deltaTime / duration; 
+                monsterGO.transform.position = Vector3.Lerp(curPos, newPos, t); 
+                yield return new WaitForSeconds(0); 
+            }
+        }
+        moving = false;
+    }
+
+	/*void MoveMonster(Monster monster, GameObject monsterGO)
 	{
 		monster.listMovements.Add (Movement.Horizontal);
 		monster.listMovements.Add (Movement.Vertical);
@@ -73,9 +141,9 @@ public class Player : MonoBehaviour {
 			// Pas possible d'enchainer les mouvements avec une coroutine TTT_TTT
 			StartCoroutine(MoveMonsterOneSquare(0.5f, monsterGO, movement));		
 		}
-	}
+	}*/
 
-	IEnumerator MoveMonsterOneSquare(float delayTime, GameObject monsterGO, Movement movement)
+	/*IEnumerator MoveMonsterOneSquare(float delayTime, GameObject monsterGO, Movement movement)
 	{
 		print ("Moving monster...");
 		
@@ -95,7 +163,7 @@ public class Player : MonoBehaviour {
 			monsterGO.transform.position = Vector3.Lerp(end_position, start_position, Time.time-startTime); // lerp from A to B in one second
 			yield return 1; // wait for next frame
 		}
-	}
+	}*/
 
 	bool CanMove(int x, int z)
 	{
