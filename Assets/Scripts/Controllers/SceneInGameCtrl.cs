@@ -69,49 +69,26 @@ public class SceneInGameCtrl : MonoBehaviour
         if (Physics.Raycast(ray, out hit, 1000))
         {
             GameObject objectHit = hit.collider.gameObject;
-            if (objectHit.name.Equals("Play2"))
+            if (objectHit.name.Equals("PlayGame"))
             {
                 initGame.SetActive(false);
                 rootInGame.SetActive(true);
                 UnBindInit();
                 Field.Instance.Generate();
             }
-            else if (objectHit.name.Equals("Regenerate") && nbMonsterSelected == 1)
+            else if (objectHit.name.Equals("Regenerate") && nbMonsterSelected == 1 && monster!= null)
             {
+                nbMonsterSelected = 0;
+                //Debug.Log("monster " + monster.level + " monsterGo " + monsterGo.name);
                 Field.Instance.RegenerateMonster(monster,monsterGo.transform.parent.gameObject);
             }
-        }
-    }
-
-    void PauseAction()
-    {
-        RaycastHit hit = new RaycastHit();
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit, 1000))
-        {
-            GameObject objectHit = hit.collider.gameObject;
-            if (objectHit.name.Equals("Return"))
+            else if (objectHit.name.Equals("Fusion") && nbMonsterSelected == 2)
             {
-                pause.SetActive(false);
-                rootInGame.SetActive(true);
+                nbMonsterSelected = 0;
+                Field.Instance.Fusion();
             }
-            else if (objectHit.name.Equals("BackMainMenu"))
-            {
-                UnBindPause();
-                Application.LoadLevel("MainScene");
-            }
-        }
-    }
 
-    void Update()
-    {
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); ;
-
-
-        if (Physics.Raycast(ray, out hit))
-        {
-            if (hit.collider.name.Contains("MonsterA"))
+            else if (hit.collider.name.Contains("Monster_A"))
             {
                 monsterGo = hit.collider.gameObject;
                 monsterGo.transform.parent.transform.FindChild("InfosMonsters").gameObject.SetActive(true);
@@ -142,4 +119,64 @@ public class SceneInGameCtrl : MonoBehaviour
             }
         }
     }
+
+    void PauseAction()
+    {
+        RaycastHit hit = new RaycastHit();
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out hit, 1000))
+        {
+            GameObject objectHit = hit.collider.gameObject;
+            if (objectHit.name.Equals("Return"))
+            {
+                pause.SetActive(false);
+                rootInGame.SetActive(true);
+            }
+            else if (objectHit.name.Equals("BackMainMenu"))
+            {
+                UnBindPause();
+                Application.LoadLevel("MainScene");
+            }
+        }
+    }
+
+   /* void Update()
+    {
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); ;
+
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.collider.name.Contains("Monster_A"))
+            {
+                monsterGo = hit.collider.gameObject;
+                monsterGo.transform.parent.transform.FindChild("InfosMonsters").gameObject.SetActive(true);
+                Field.Instance.dicoMonsterGOMonster.TryGetValue(monsterGo, out monster);
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if (nbMonsterSelected < 2)
+                    {
+                        monsterGo.transform.renderer.material.color = Color.red;
+                        monster.isSelected = true;
+                        nbMonsterSelected++;
+                    }
+                }
+                else if (Input.GetMouseButtonDown(1))
+                {
+                    monsterGo.transform.renderer.material.color = Color.white;
+                    monster.isSelected = false;
+                    nbMonsterSelected--;
+                    monsterGo = null;
+                }
+            }
+        }
+        else
+        {
+            if (monsterGo != null)
+            {
+                monsterGo.transform.parent.transform.FindChild("InfosMonsters").gameObject.SetActive(false);
+            }
+        }
+    }*/
 }

@@ -122,7 +122,7 @@ public class Field : MonoBehaviour
              AllMonstersGo.name = "MonstersInfos_" + m.whichTeam.ToString() + i;
              AllMonstersGo.transform.parent = parent.transform;
 
-             monsterGo.name = "Monster" + m.whichTeam.ToString() + "_" + i;
+             monsterGo.name = "Monster_" + m.whichTeam.ToString() + i;
              m.isSelected = false;
              posX += 2;
 
@@ -165,29 +165,130 @@ public class Field : MonoBehaviour
     {
         print(m.whichTeam + " - " + m.listAttackPatterns + " - " + m.listDefensePatterns + " - " + m.listMovements + " - " + m.level + " - " + m.speed + " - " + m.pv);
         Monster mon = new Monster(m.whichTeam,m.listAttackPatterns,m.listDefensePatterns,m.listMovements,m.level,m.speed,m.pv);
-        mon.currentSquare = m.currentSquare;
         mon.isSelected = false;
         ListMonsters.Remove(m);
         ListMonsters.Add(mon);
 
         GameObject AllMonstersGo = (GameObject)Instantiate(Resources.Load("Prefabs/Prefab_MonsterInfos"), allMonster.transform.position, Quaternion.identity);
         GameObject monsterGo = AllMonstersGo.transform.FindChild("Monster").gameObject;
+        dicoMonsterGOMonster.Add(monsterGo, mon);
         mon.Infos(AllMonstersGo.transform.FindChild("InfosMonsters").gameObject.transform.GetComponent<TextMesh>());
         AllMonstersGo.name = allMonster.name;
         AllMonstersGo.transform.parent = allMonster.transform.parent;
 
         monsterGo.name = allMonster.transform.GetChild(1).name;
 
-        if (mon.whichTeam == Team.A)
-        {
-            ListMonstersGoPlayer.Remove(allMonster);
-            ListMonstersGoPlayer.Add(AllMonstersGo);
-        }
         ListMonstersGo.Remove(allMonster.transform.transform.GetChild(1).gameObject);
         ListMonstersGo.Add(monsterGo);
         Destroy(allMonster);
     }
 
+    public void Fusion()
+    {
+        Monster monster1 = null,monster2 = null;
+        //Get Monster Select
+        foreach (Monster monster in ListMonsters)
+        {
+            if(monster.isSelected)
+            {
+                if(monster1 == null)
+                    monster1 = monster;
+                if (monster1 != monster && monster2 == null)
+                {
+                    monster2 = monster;
+                    break;
+                }
+            }
+        }
+
+        print("Monsters select is " + monster1.level + " _ " + monster2.level);
+
+        //Create New Monster and Destroy old
+        int level,speed,pv;
+        if((monster1.level + monster2.level) <= 5)
+            level = (monster1.level + monster2.level);
+        else
+            level = 5;
+
+        List<AttackPattern> listAttackPatterns = new List<AttackPattern>();
+        List<DefensePattern> listDefensePatterns = new List<DefensePattern>();
+        List<Movement> listMovements = new List<Movement>();
+
+        if (monster1.level > monster2.level)
+        {
+            speed = (int)(0.5 * monster1.speed) + monster2.speed;
+            pv = (int)(1.5 * monster1.pv) + monster2.pv;
+            listAttackPatterns = monster2.listAttackPatterns;
+            for (int i = 0; i < monster1.listDefensePatterns.Capacity; i++ )
+            {
+                DefensePattern def = monster1.listDefensePatterns.ElementAt(i);
+                def.power += 2;
+                listDefensePatterns.Add(def);
+            }
+            if (Random.Range(0, 1) == 0)
+            {
+                listMovements.Add(Movement.Horizontal);
+            }
+            else
+            {
+                listMovements.Add(Movement.Vertical);
+            }
+        }
+        else
+        {
+            speed = (int)(0.5 * monster2.speed) + monster1.speed;
+            pv = (int)(1.5 * monster2.pv) + monster1.pv;
+            listAttackPatterns = monster1.listAttackPatterns;
+            for (int i = 0; i < monster2.listDefensePatterns.Count; i++)
+            {
+                Debug.Log(monster2.listDefensePatterns.ElementAt(i));
+                DefensePattern def = monster2.listDefensePatterns.ElementAt(i);
+                def.power += 2;
+                listDefensePatterns.Add(def);
+            }
+            if (Random.Range(0, 1) == 0)
+            {
+                listMovements.Add(Movement.Horizontal);
+            }
+            else
+            {
+                listMovements.Add(Movement.Vertical);
+            }
+        }
+        
+
+
+        Monster mon = new Monster(monster1.whichTeam, listAttackPatterns, listDefensePatterns, listMovements, level, speed, pv);
+        mon.isSelected = false;
+
+        GameObject GoM1 =  dicoMonsterGOMonster.FirstOrDefault(x => x.Value == monster1).Key;
+        GameObject GoM2 = dicoMonsterGOMonster.FirstOrDefault(x => x.Value == monster2).Key;
+
+        //GameObject AllGoM1 = GoM1.transform.parent.gameObject;
+        //GameObject AllGoM2 = GoM1.transform.parent;
+        GameObject AllMonstersGo = (GameObject)Instantiate(Resources.Load("Prefabs/Prefab_MonsterInfos"), GoM1.transform.parent.gameObject.transform.position, Quaternion.identity);
+        GameObject monsterGo = AllMonstersGo.transform.FindChild("Monster").gameObject;
+        dicoMonsterGOMonster.Add(monsterGo, mon);
+        mon.Infos(AllMonstersGo.transform.FindChild("InfosMonsters").gameObject.transform.GetComponent<TextMesh>());
+        AllMonstersGo.name = "MonstersInfos_" + mon.whichTeam.ToString() + (monster1.level -1);
+        AllMonstersGo.transform.parent = GoM1.transform.parent.gameObject.transform.parent;
+
+        monsterGo.name = "Monster_" + mon.whichTeam.ToString() + (monster1.level -1);
+
+        dicoMonsterGOMonster.Remove(GoM1);
+        dicoMonsterGOMonster.Remove(GoM2);
+
+        ListMonsters.Remove(monster1);
+        ListMonsters.Remove(monster2);
+        ListMonsters.Add(mon);
+
+        ListMonstersGo.Remove(GoM1);
+        ListMonstersGo.Remove(GoM2);
+        ListMonstersGo.Add(monsterGo);
+
+        Destroy(GoM1.transform.parent.gameObject);
+        Destroy(GoM2.transform.parent.gameObject);
+    }
 
 	public void Generate()
 	{
@@ -232,14 +333,14 @@ public class Field : MonoBehaviour
                 AllMonstersGo.transform.parent = parent.transform;
 
                 monster.isSelected = false;
-                monsterGo.name = "Monster" + monster.whichTeam.ToString() + "_" + monsterCounter++;
+                monsterGo.name = "Monster_" + monster.whichTeam.ToString() + monsterCounter++;
                 ListMonstersGo.Add(monsterGo);
                 dicoMonsterGOMonster.Add(monsterGo, monster);
             }
             else
             {
                 GameObject myValue = dicoMonsterGOMonster.FirstOrDefault(x => x.Value == monster).Key;
-                myValue.transform.position = pos;
+                myValue.transform.parent.transform.position = pos;
             }
             
         }
