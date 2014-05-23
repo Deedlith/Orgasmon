@@ -39,7 +39,7 @@ public class Genetic
 	
 	int _patternsLength = 50;
 	int _populationLength = 100;
-	int _iterations = 50;
+	int _iterations = 5;
 	int _mutation = 5;
 
 	List<List<Movement>> _patterns;

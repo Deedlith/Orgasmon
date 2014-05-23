@@ -59,6 +59,13 @@ public class Player : MonoBehaviour {
 				_monsterSelected = objectHit.name;
 				_currentMonsterGO = GameObject.Find(_monsterSelected);
 				_currentMonster = Field.Instance.GetMonsterFromGo(_currentMonsterGO);
+
+				if(_currentMonster != null) 
+				{
+					Genetic.Instance.DisplayPattern(_currentMonster.listMovements);
+					Moves ();
+				}
+				else print("Error Select");
 			}
 		}
 	}
@@ -124,6 +131,166 @@ public class Player : MonoBehaviour {
         }
         moving = false;
     }
+
+	public class Move
+	{
+		public Square currentSquare;
+		public List<Move> child;
+	}
+
+	public void Moves()
+	{
+		int index = 0;
+		Move currentMove = new Move();
+
+		if(_currentMonster != null)
+		{
+			currentMove.currentSquare = _currentMonster.currentSquare;
+			currentMove.child = new List<Move>();
+
+			if(_currentMonster.listMovements[index] == Movement.Vertical)
+			{
+				Square sf = Field.Instance.ListSquares.Where(ls => ((ls.PositionX == currentMove.currentSquare.PositionX) && (ls.PositionZ == currentMove.currentSquare.PositionZ + 1))).FirstOrDefault();
+				Square sb = Field.Instance.ListSquares.Where(ls => ((ls.PositionX == currentMove.currentSquare.PositionX) && (ls.PositionZ == currentMove.currentSquare.PositionZ - 1))).FirstOrDefault();
+
+				if(sf != null) 
+				{
+					Move tempMove = new Move();
+					tempMove.currentSquare = sf;
+					tempMove.child = new List<Move>();
+					currentMove.child.Add(tempMove);
+				}
+
+				if(sb != null)
+				{
+					Move tempMove = new Move();
+					tempMove.currentSquare = sb;
+					tempMove.child = new List<Move>();
+					currentMove.child.Add(tempMove);
+				}
+			}
+			else if(_currentMonster.listMovements[index] == Movement.Horizontal)
+			{
+				Square sr = Field.Instance.ListSquares.Where(ls => ((ls.PositionX == currentMove.currentSquare.PositionX + 1) && (ls.PositionZ == currentMove.currentSquare.PositionZ))).FirstOrDefault();
+				Square sl = Field.Instance.ListSquares.Where(ls => ((ls.PositionX == currentMove.currentSquare.PositionX - 1) && (ls.PositionZ == currentMove.currentSquare.PositionZ))).FirstOrDefault();
+				
+				if(sr != null) 
+				{
+					Move tempMove = new Move();
+					tempMove.currentSquare = sr;
+					tempMove.child = new List<Move>();
+					currentMove.child.Add(tempMove);
+				}
+				
+				if(sl != null)
+				{
+					Move tempMove = new Move();
+					tempMove.currentSquare = sl;
+					tempMove.child = new List<Move>();
+					currentMove.child.Add(tempMove);
+				}
+			}
+
+			SearchMove(index, _currentMonster.listMovements.Count(), currentMove.child);
+
+			List<Move> ListMoves = new List<Move>();
+			ListMoves.Add(currentMove);
+
+			DisplayClear();
+
+			DisplayMove(ListMoves);
+		}
+	}
+
+	public void DisplayClear()
+	{
+		for(int x = 0; x < 10; x++)
+		{
+			for(int z = 0; z < 10; z++)
+			{
+				GameObject square = Field.Instance.ListSquaresGo.Where(ls => ((ls.gameObject.transform.position.x == x) && (ls.gameObject.transform.position.z == z))).FirstOrDefault();
+				
+				if(square != null)
+				{
+					square.renderer.material.color = new Color(255, 255, 255,1);
+				}
+			}
+		}
+	}
+
+	public void DisplayMove(List<Move> moves)
+	{
+		if(moves != null && moves.Count() > 0)
+		{
+			foreach(Move move in moves)
+			{
+				GameObject square = Field.Instance.ListSquaresGo.Where(ls => ((ls.gameObject.transform.position.x == move.currentSquare.PositionX) && (ls.gameObject.transform.position.z == move.currentSquare.PositionZ))).FirstOrDefault();
+				
+				if(square != null)
+				{
+					square.renderer.material.color = new Color(128,0,0,1);
+				}
+				
+				DisplayMove(move.child);
+			}
+		}
+	}
+
+	public void SearchMove(int index, int counterMove, List<Move> possibilityMoves)
+	{
+		index += 1;
+
+		if(index < counterMove)
+		{
+			foreach(Move move in possibilityMoves)
+			{								
+				if(_currentMonster.listMovements[index] == Movement.Vertical)
+				{
+					Square sf = Field.Instance.ListSquares.Where(ls => ((ls.PositionX == move.currentSquare.PositionX) && (ls.PositionZ == move.currentSquare.PositionZ + 1))).FirstOrDefault();
+					Square sb = Field.Instance.ListSquares.Where(ls => ((ls.PositionX == move.currentSquare.PositionX) && (ls.PositionZ == move.currentSquare.PositionZ - 1))).FirstOrDefault();
+					
+					if(sf != null) 
+					{
+						Move tempMove = new Move();
+						tempMove.currentSquare = sf;
+						tempMove.child = new List<Move>();
+						move.child.Add(tempMove);
+					}
+					
+					if(sb != null)
+					{
+						Move tempMove = new Move();
+						tempMove.currentSquare = sb;
+						tempMove.child = new List<Move>();
+						move.child.Add(tempMove);
+					}
+				}
+				else if(_currentMonster.listMovements[index] == Movement.Horizontal)
+				{
+					Square sr = Field.Instance.ListSquares.Where(ls => ((ls.PositionX == move.currentSquare.PositionX + 1) && (ls.PositionZ == move.currentSquare.PositionZ))).FirstOrDefault();
+					Square sl = Field.Instance.ListSquares.Where(ls => ((ls.PositionX == move.currentSquare.PositionX - 1) && (ls.PositionZ == move.currentSquare.PositionZ))).FirstOrDefault();
+					
+					if(sr != null) 
+					{
+						Move tempMove = new Move();
+						tempMove.currentSquare = sr;
+						tempMove.child = new List<Move>();
+						move.child.Add(tempMove);
+					}
+					
+					if(sl != null)
+					{
+						Move tempMove = new Move();
+						tempMove.currentSquare = sl;
+						tempMove.child = new List<Move>();
+						move.child.Add(tempMove);
+					}
+				}
+
+				SearchMove(index, _currentMonster.listMovements.Count(), move.child);
+			}
+		}			
+	}
 
 	/*void MoveMonster(Monster monster, GameObject monsterGO)
 	{
