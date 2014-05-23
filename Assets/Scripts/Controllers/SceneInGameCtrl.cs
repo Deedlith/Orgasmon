@@ -87,38 +87,7 @@ public class SceneInGameCtrl : MonoBehaviour
             {
                 nbMonsterSelected = 0;
                 Field.Instance.Fusion();
-            }
-            /*else if (objectHit.name.Contains("Monster_A"))
-            {
-                print("prout");
-                monsterGo = objectHit.gameObject;
-                monsterGo.transform.parent.transform.FindChild("InfosMonsters").gameObject.SetActive(true);
-                Field.Instance.dicoMonsterGOMonster.TryGetValue(monsterGo, out monster);
-                if (Input.GetMouseButtonDown(0))
-                {
-                    if (nbMonsterSelected < 2)
-                    {
-                        monsterGo.transform.renderer.material.color = Color.red;
-                        monster.isSelected = true;
-                        nbMonsterSelected++;
-                    }
-                }
-                else if (Input.GetMouseButtonDown(1))
-                {
-                    monsterGo.transform.renderer.material.color = Color.white;
-                    monster.isSelected = false;
-                    nbMonsterSelected--;
-                    monsterGo = null;
-                }
-            }
-        }
-        else
-        {
-            if (monsterGo != null)
-            {
-                monsterGo.transform.parent.transform.FindChild("InfosMonsters").gameObject.SetActive(false);
-            }
-        }*/
+            }       
         }
     }
 
@@ -132,7 +101,6 @@ public class SceneInGameCtrl : MonoBehaviour
             objectHit = hit.collider.gameObject;
             if (objectHit.name.Contains("Monster_A") && initGame.activeSelf)
             {
-                print("prout");
                 monsterGo = objectHit.gameObject;
                 monsterGo.transform.parent.transform.FindChild("InfosMonsters").gameObject.SetActive(true);
                 Field.Instance.dicoMonsterGOMonster.TryGetValue(monsterGo, out monster);

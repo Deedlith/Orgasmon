@@ -47,7 +47,7 @@ public class Field : MonoBehaviour
     //create monster for player
     public void CreateMonsters()
     {
-         int posX = -4, posY = 2, posZ = 4;
+         int posX = -2, posY = 1, posZ = 4;
          for (int i = 0; i < 5; i++)
          {
              // Attack Pattern
@@ -75,6 +75,7 @@ public class Field : MonoBehaviour
              //For TeamA
              Vector3 pos = new Vector3(posX, posY, posZ);
              GameObject AllMonstersGo = (GameObject)Instantiate(Resources.Load("Prefabs/Prefab_MonsterInfos"), pos, Quaternion.identity);
+             AllMonstersGo.transform.localScale = new Vector3(0.5f,0.5f,0.5f);
              GameObject monsterGo = AllMonstersGo.transform.FindChild("Monster").gameObject;
 
              dicoMonsterGOMonster.Add(monsterGo, m);
@@ -84,7 +85,7 @@ public class Field : MonoBehaviour
 
              monsterGo.name = "Monster_" + m.whichTeam.ToString() + i;
              m.isSelected = false;
-             posX += 2;
+             posX += 1;
 
              listAttackPatterns = new List<AttackPattern>();
              attack = new AttackPattern();
@@ -131,6 +132,7 @@ public class Field : MonoBehaviour
         ListMonsters.Add(mon);
 
         GameObject AllMonstersGo = (GameObject)Instantiate(Resources.Load("Prefabs/Prefab_MonsterInfos"), allMonster.transform.position, Quaternion.identity);
+        AllMonstersGo.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         GameObject monsterGo = AllMonstersGo.transform.FindChild("Monster").gameObject;
         monsterGo.name = allMonster.transform.GetChild(1).name;
         dicoMonsterGOMonster.Add(monsterGo, mon);
@@ -232,6 +234,7 @@ public class Field : MonoBehaviour
         GameObject GoM2 = dicoMonsterGOMonster.FirstOrDefault(x => x.Value == monster2).Key;
 
         GameObject AllMonstersGo = (GameObject)Instantiate(Resources.Load("Prefabs/Prefab_MonsterInfos"), GoM1.transform.parent.gameObject.transform.position, Quaternion.identity);
+        AllMonstersGo.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         GameObject monsterGo = AllMonstersGo.transform.FindChild("Monster").gameObject;
         dicoMonsterGOMonster.Add(monsterGo, mon);
         mon.Infos(AllMonstersGo.transform.FindChild("InfosMonsters").gameObject.transform.GetComponent<TextMesh>());
@@ -293,6 +296,7 @@ public class Field : MonoBehaviour
 
                 pos = new Vector3(s.PositionX, 0.0f, s.PositionZ);
                 GameObject AllMonstersGo = (GameObject)Instantiate(Resources.Load("Prefabs/Prefab_MonsterInfos"), pos, Quaternion.identity);
+                AllMonstersGo.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
                 GameObject monsterGo = AllMonstersGo.transform.FindChild("Monster").gameObject;
 
                 monster.Infos(AllMonstersGo.transform.FindChild("InfosMonsters").gameObject.transform.GetComponent<TextMesh>());

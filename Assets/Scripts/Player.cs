@@ -11,6 +11,7 @@ public class Player : MonoBehaviour {
 
     float duration= 0.9f; // duration of movement in seconds
     bool moving= false; // flag to indicate it's moving
+    List<Vector3> listClickPossible = new List<Vector3>();
 
 	// Use this for initialization
 	void Start () {
@@ -43,7 +44,7 @@ public class Player : MonoBehaviour {
 		if(Physics.Raycast(ray, out hit, 1000)) 
 		{
 			GameObject objectHit = hit.collider.gameObject;
-            if (objectHit != null && objectHit.name.Contains("Square") && _currentMonsterGO != null)
+            if (objectHit != null && objectHit.name.Contains("Square") && _currentMonsterGO != null && existPosition(objectHit.transform.position))
 			{
 				print ("SQUARE SELECTED : " + objectHit.name);
                 StartCoroutine(MoveMonster(_currentMonsterGO, objectHit));
@@ -70,7 +71,18 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-
+    bool existPosition(Vector3 position)
+    {
+        //bool notFind = false;
+        int i = 0;
+        while (i < listClickPossible.Count)// && notFind)
+        {
+            if (listClickPossible[i] == position)
+                return true;
+            i++;
+        }
+        return false;
+    }
 
     IEnumerator MoveMonster(GameObject monsterGO,GameObject end)
     {
@@ -130,6 +142,7 @@ public class Player : MonoBehaviour {
         }
         moving = false;
         Field.Instance.GetMonsterFromGo(monsterGO).currentSquare = Field.Instance.ListSquares.Where(s => s.PositionX == Mathf.RoundToInt(end.transform.position.x) && s.PositionZ == Mathf.RoundToInt(end.transform.position.z)).First();
+        listClickPossible.Clear();
     }
 
 	public class Move
@@ -228,6 +241,8 @@ public class Player : MonoBehaviour {
 				
 				if(square != null)
 				{
+
+                    listClickPossible.Add(square.transform.position);
 					square.renderer.material.color = new Color(128,0,0,1);
 				}
 				
