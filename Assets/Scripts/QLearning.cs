@@ -204,7 +204,7 @@ public class QLearning
 
         InitArrayQuality();
 
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 50; i++)
         {
             // Set the current starting position
             int posX = Mathf.RoundToInt(m.currentSquare.PositionX);
@@ -216,7 +216,16 @@ public class QLearning
                 int offsetX = Random.Range(0, 2);
                 int offsetZ = Random.Range(0, 2);
                 */
-                //Do the movement of the monster. Each time there are a change, choose random
+                // Choose a mouvement with the four possible direction
+                // Do the mouvement
+                int maxQ = 0;
+                // Then calcul all the other movement quality, select the max and use it pour the true quality
+                for (int j = 0; j < 4; j++)
+                {
+
+                }
+
+                _arrayQuality[posX, posZ] = Mathf.RoundToInt(_arrayReward[posX, posZ] + gamma * maxQ);
 
             } while ((posX != posLeft.x && posZ != posLeft.z)
                 || (posX != posRight.x && posZ != posRight.z)
