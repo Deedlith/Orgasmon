@@ -118,8 +118,7 @@ public class Field : MonoBehaviour
 
 		if (Input.GetKeyDown(KeyCode.G))
 		{
-			Genetic.Instance.GeneratePopulation();
-			Genetic.Instance.DisplayPopulation();
+			Genetic.Instance.DisplayPattern(Genetic.Instance.Generate());
 		}
 	}
 
