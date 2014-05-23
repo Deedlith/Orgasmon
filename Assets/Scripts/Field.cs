@@ -78,6 +78,28 @@ public class Field : MonoBehaviour
              AllMonstersGo.transform.localScale = new Vector3(0.5f,0.5f,0.5f);
              GameObject monsterGo = AllMonstersGo.transform.FindChild("Monster").gameObject;
 
+			 switch (i)
+			 {
+			 	case 0: 
+					monsterGo.renderer.material.color = Color.yellow; 
+					break;
+			 	case 1: 
+					monsterGo.renderer.material.color = Color.green; 
+					break;
+			 	case 2: 
+					monsterGo.renderer.material.color = Color.blue; 
+					break;
+			 	case 3: 
+					monsterGo.renderer.material.color = Color.magenta; 
+					break;
+			 	case 4: 
+					monsterGo.renderer.material.color = Color.red; 
+					break;
+			 	default: 
+					monsterGo.renderer.material.color = Color.white;
+					break;
+			 }
+
              dicoMonsterGOMonster.Add(monsterGo, m);
              m.Infos(AllMonstersGo.transform.FindChild("InfosMonsters").gameObject.transform.GetComponent<TextMesh>());
              AllMonstersGo.name = "MonstersInfos_" + m.whichTeam.ToString() + i;
