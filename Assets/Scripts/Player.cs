@@ -74,8 +74,7 @@ public class Player : MonoBehaviour {
 
     IEnumerator MoveMonster(GameObject monsterGO,GameObject end)
     {
-        if (moving) yield return new WaitForSeconds(0) ; 
-
+        if (moving) yield return new WaitForSeconds(0) ;
         float distanceX = end.transform.position.x - monsterGO.transform.position.x;
         distanceX = Mathf.Sqrt(distanceX);
 
@@ -130,6 +129,7 @@ public class Player : MonoBehaviour {
             }
         }
         moving = false;
+        Field.Instance.GetMonsterFromGo(monsterGO).currentSquare = Field.Instance.ListSquares.Where(s => s.PositionX == Mathf.RoundToInt(end.transform.position.x) && s.PositionZ == Mathf.RoundToInt(end.transform.position.z)).First();
     }
 
 	public class Move
