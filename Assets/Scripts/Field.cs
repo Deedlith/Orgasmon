@@ -63,8 +63,12 @@ public class Field : MonoBehaviour
              defense.power = (i + 1) * 2;
              listDefensePatterns.Add(defense);
              // Movement Pattern
-             List<Movement> listMovements = new List<Movement>();
-             listMovements.Add(Movement.Vertical);
+			 List<Movement> listMovements = Genetic.Instance.Generate();
+			
+				/*new List<Movement>();
+             listMovements.Add(Movement.Vertical);*/
+
+
              Monster m = new Monster(Team.A, listAttackPatterns, listDefensePatterns, listMovements, (i + 1), ((i + 1) * 3), 2 * (i + 1));
              ListMonsters.Add(m);
 
@@ -94,8 +98,9 @@ public class Field : MonoBehaviour
              defense.power = (i + 1) * 2;
              listDefensePatterns.Add(defense);
              // Movement Pattern
-             listMovements = new List<Movement>();
-             listMovements.Add(Movement.Vertical);
+			 listMovements = Genetic.Instance.Generate();
+				/*new List<Movement>();
+             listMovements.Add(Movement.Vertical);*/
              m = new Monster(Team.B, listAttackPatterns, listDefensePatterns, listMovements, (i + 1), ((i + 1) * 3), 2 * (i + 1));
              ListMonsters.Add(m);
 
@@ -187,14 +192,17 @@ public class Field : MonoBehaviour
                 def.power += 2;
                 listDefensePatterns.Add(def);
             }
-            if (Random.Range(0, 1) == 0)
+
+			listMovements = Genetic.Instance.Generate();
+
+            /*if (Random.Range(0, 1) == 0)
             {
-                listMovements.Add(Movement.Horizontal);
+				listMovements.Add(Movement.Horizontal);
             }
             else
             {
                 listMovements.Add(Movement.Vertical);
-            }
+            }*/
         }
         else
         {
@@ -207,14 +215,17 @@ public class Field : MonoBehaviour
                 def.power += 2;
                 listDefensePatterns.Add(def);
             }
-            if (Random.Range(0, 1) == 0)
+            
+			listMovements = Genetic.Instance.Generate();
+
+			/*if (Random.Range(0, 1) == 0)
             {
                 listMovements.Add(Movement.Horizontal);
             }
             else
             {
                 listMovements.Add(Movement.Vertical);
-            }
+            }*/
         }
         
 
