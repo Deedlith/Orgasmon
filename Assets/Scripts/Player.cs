@@ -6,6 +6,11 @@ using System.Linq;
 public class Player : MonoBehaviour {
 
 	string _monsterSelected; // monster currently selected by player
+	GameObject _currentMonsterGO;
+	Monster _currentMonster;
+
+    float duration= 0.9f; // duration of movement in seconds
+    bool moving= false; // flag to indicate it's moving
 
 	void Awake()
 	{
@@ -16,7 +21,7 @@ public class Player : MonoBehaviour {
 	void Start () {
 		GameManager.Instance.LevelEvent += (bool isOnLevel) => { if(isOnLevel == true) BindMove(); else UnbindMove(); };
 	}
-	
+
 	void BindMove()
 	{
 		GameManager.Instance.Action1Pressed += MoveAction;
@@ -43,44 +48,119 @@ public class Player : MonoBehaviour {
 		if(Physics.Raycast(ray, out hit, 1000)) 
 		{
 			GameObject objectHit = hit.collider.gameObject;
-			if(objectHit.name.Substring(0, 6).Equals("Square"))
+            if (objectHit.name.Contains("Square") && _currentMonsterGO != null)
 			{
 				print ("SQUARE SELECTED : " + objectHit.name);
-
-				GameObject currentMonsterGO = GameObject.Find(_monsterSelected);
-				Monster currentMonster = Field.Instance.GetMonsterFromGo(currentMonsterGO);
-				MoveMonster(currentMonster, currentMonsterGO);
+                StartCoroutine(MoveMonster(_currentMonsterGO, objectHit));
+                _currentMonster = null;
+                _currentMonsterGO = null;
+                _monsterSelected = null;
+				//MoveMonster(_currentMonster, _currentMonsterGO);
 			}
-			else if(objectHit.name.Substring(0, 5).Equals("TeamA"))
+            else if (objectHit.name.Contains("A"))
 			{
 				print ("MONSTER SELECTED : " + objectHit.name);
-				//StopAllCoroutines();
+
 				_monsterSelected = objectHit.name;
+				_currentMonsterGO = GameObject.Find(_monsterSelected);
+				_currentMonster = Field.Instance.GetMonsterFromGo(_currentMonsterGO);
 			}
 		}
 	}
 
-	void MoveMonster(Monster monster, GameObject monsterGO)
+
+
+    IEnumerator MoveMonster(GameObject monsterGO,GameObject end)
+    {
+        if (moving) yield return new WaitForSeconds(0) ; 
+
+        float distanceX = end.transform.position.x - monsterGO.transform.position.x;
+        distanceX = Mathf.Sqrt(distanceX);
+
+        float distanceZ = end.transform.position.z - monsterGO.transform.position.z;
+        distanceZ = Mathf.Sqrt(distanceZ);
+
+        //print("monsterGO " + monsterGO.transform.position + " end " + end.transform.position);
+
+        Vector3 initPos = monsterGO.transform.position;
+        if (distanceX > distanceZ)
+        {
+            moving = true; 
+            var curPos = initPos;
+            var newPos = new Vector3(end.transform.position.x, 0, monsterGO.transform.position.z); 
+            for (float t = 0f; t < 1; )
+            {
+                t += Time.deltaTime / duration;
+                monsterGO.transform.position = Vector3.Lerp(curPos, newPos, t);
+                yield return new WaitForSeconds(0);
+            }
+            //print("INTER CHEMIN " + monsterGO.transform.position + " initPos " + initPos + " end " + end.transform.position);
+            monsterGO.transform.position = curPos = new Vector3(end.transform.position.x, 0, initPos.z);
+            newPos = new Vector3(end.transform.position.x, 0, end.transform.position.z); 
+
+            for (float t = 0f; t < 1; )
+            {
+                t += Time.deltaTime / duration;
+                monsterGO.transform.position = Vector3.Lerp(curPos, newPos, t); 
+                yield return new WaitForSeconds(0); 
+            }
+        }
+        else
+        {
+            moving = true;
+            var curPos = initPos;
+            var newPos = new Vector3(monsterGO.transform.position.x, 0, end.transform.position.z); 
+            for (float t = 0f; t < 1; )
+            {
+                t += Time.deltaTime / duration;
+                monsterGO.transform.position = Vector3.Lerp(curPos, newPos, t); 
+                yield return new WaitForSeconds(0); 
+            }
+            //print("INTER CHEMIN " + monsterGO.transform.position + " initPos " + initPos + " end " + end.transform.position);
+            curPos = new Vector3(initPos.x, 0, end.transform.position.z); 
+            newPos = new Vector3(end.transform.position.x, 0, end.transform.position.z); 
+
+            for (float t = 0f; t < 1; )
+            {
+                t += Time.deltaTime / duration; 
+                monsterGO.transform.position = Vector3.Lerp(curPos, newPos, t); 
+                yield return new WaitForSeconds(0); 
+            }
+        }
+        moving = false;
+    }
+
+	/*void MoveMonster(Monster monster, GameObject monsterGO)
 	{
-		List<Movement> listMovements = monster.listMovements;
-
-		foreach (Movement movement in listMovements) {
-			//StartCoroutine(MoveMonsterOneSquare(0.5f, movement, monsterGO));		
+		monster.listMovements.Add (Movement.Horizontal);
+		monster.listMovements.Add (Movement.Vertical);
+		monster.listMovements.Add (Movement.Horizontal);
+		monster.listMovements.Add (Movement.Vertical);
+		foreach (Movement movement in monster.listMovements)
+		{
+			// Pas possible d'enchainer les mouvements avec une coroutine TTT_TTT
+			StartCoroutine(MoveMonsterOneSquare(0.5f, monsterGO, movement));		
 		}
-	}
+	}*/
 
-	/*IEnumerator MoveMonsterOneSquare(float delayTime, GameObject monster, Movement movement)
+	/*IEnumerator MoveMonsterOneSquare(float delayTime, GameObject monsterGO, Movement movement)
 	{
 		print ("Moving monster...");
 		
-		Vector3 start_position = monster.transform.position;
-		Vector3 end_position = new Vector3 (start_position.x, start_position.y, start_position.z++);
+		Vector3 start_position = monsterGO.transform.position;
+		Vector3 end_position = monsterGO.transform.position;
+
+		if (movement == Movement.Vertical)
+			end_position = new Vector3 (start_position.x, start_position.y, start_position.z++);
+
+		if (movement == Movement.Horizontal)
+			end_position = new Vector3 (start_position.x++, start_position.y, start_position.z);
 		
 		yield return new WaitForSeconds(delayTime);
 		float startTime = Time.time; // Time.time contains current frame time, so remember starting point
 		while (Time.time-startTime <= 1)
 		{
-			monster.transform.position = Vector3.Lerp(end_position, start_position, Time.time-startTime); // lerp from A to B in one second
+			monsterGO.transform.position = Vector3.Lerp(end_position, start_position, Time.time-startTime); // lerp from A to B in one second
 			yield return 1; // wait for next frame
 		}
 	}*/
@@ -88,19 +168,5 @@ public class Player : MonoBehaviour {
 	bool CanMove(int x, int z)
 	{
 		return true;
-		/*if (onDice == false)
-			return false;
-		
-		var nextSquare = Level.Instance._field.ListSquares.Where(s => s.PositionX == x && s.PositionZ == z).FirstOrDefault();
-		
-		if(nextSquare == null || !nextSquare.SquareIsExisting())
-		{
-			return false;
-		}
-		
-		if(this.onDice.actualSquare != nextSquare)
-			return false;
-		
-		return true;*/
 	}
 }

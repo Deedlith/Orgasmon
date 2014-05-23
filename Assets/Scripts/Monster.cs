@@ -62,7 +62,32 @@ public class Monster
     public bool isSelected;
     public Team whichTeam;
 
+    public Monster()
+    {
+    }
 
+    public Monster(Team whichT, List<AttackPattern> listAttPat, List<DefensePattern> listDefPat, List<Movement> listMov,int l = 0, int s = 0, int pv2 = 0)
+    {
+        level = l;
+        pv = pv2;
+        // Attack Pattern
+        listAttackPatterns = listAttPat;
+        AttackPattern attack = new AttackPattern();
+        attack.atk = Attack.Arms;
+        attack.power = level * 3;
+        listAttackPatterns.Add(attack);
+        // Defense Pattern
+        listDefensePatterns = listDefPat;
+        DefensePattern defense = new DefensePattern();
+        defense.def = Shield.Arms;
+        defense.power = level;
+        listDefensePatterns.Add(defense);
+        // Movement Pattern
+        listMovements = listMov;
+        listMovements.Add(Movement.Vertical);
+        speed = s;
+        whichTeam = whichT;
+    }
 
 	// Use this for initialization
 	void Start ()
@@ -75,6 +100,12 @@ public class Monster
     {
 	
 	}
+
+
+    public void Infos(TextMesh text)
+    {
+        text.text = "Level: " + level + "\nPV: " + pv + "\nSpeed: " + speed + "\nTeam: " + whichTeam;
+    }
 
     public int LaunchAttack(Monster other)
     {
