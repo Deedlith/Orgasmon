@@ -5,7 +5,7 @@ public class ControllerManager : MonoBehaviour
 {
 	public KeyCode _action1 = KeyCode.Mouse0;
 	public KeyCode _action2 = KeyCode.Mouse1;
-	public KeyCode _pause = KeyCode.P;
+	public KeyCode _pause = KeyCode.Escape;
 	
 	delegate bool HasActionPressed();
 	HasActionPressed _hasAction1Pressed;
