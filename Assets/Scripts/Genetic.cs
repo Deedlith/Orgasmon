@@ -39,7 +39,7 @@ public class Genetic
 	
 	int _patternsLength = 50;
 	int _populationLength = 100;
-	int _iterations = 5;
+	int _iterations = 50;
 	int _mutation = 5;
 
 	List<List<Movement>> _patterns;
@@ -104,27 +104,27 @@ public class Genetic
 
 			double[] weights = new double[lengthWeights];
 
-			double stepper = 0.1;
+			//double stepper = 0.1f;
 
 			for(int counter = 0; counter < lengthWeights; counter++)
 			{
 				if(counter < lengthIHSums)
 				{
-					weights[counter] = stepper;
-					stepper += 0.1;
+					weights[counter] = ((double) UnityEngine.Random.Range(0.0f, 0.1f));
+					//stepper += 0.1f;
 				}
 				else if(counter < (lengthIHSums + lengthIHBiaises))
 				{
-					weights[counter] = -((double) UnityEngine.Random.Range(1, 10)) * mutation;
+					weights[counter] = -((double) UnityEngine.Random.Range(0.0f, 1.0f)) * (mutation / 1000);
 				}
 				else if(counter < (lengthIHSums + lengthIHBiaises + lengthHOSums))
 				{
-					weights[counter] = stepper;
-					stepper += 0.1;
+					weights[counter] = ((double) UnityEngine.Random.Range(0.0f, 0.1f));
+					//stepper += 0.1f;
 				}
 				else if(counter < (lengthIHSums + lengthIHBiaises + lengthHOSums + lengthHOBiaises))
 				{
-					weights[counter] = -((double) UnityEngine.Random.Range(1, 10)) * mutation;
+					weights[counter] = -((double) UnityEngine.Random.Range(0.0f, 1.0f)) * (mutation / 1000);
 				}
 			}
 
@@ -144,7 +144,7 @@ public class Genetic
 		int aPosX = 1;
 		int aPosZ = 9;
 
-		double distance = Math.Sqrt(Math.Pow((Math.Abs(aPosX) - Math.Abs(sPosX)), 2) + Math.Pow((Math.Abs(aPosZ) - Math.Abs(sPosZ)), 2));
+		double distance = Math.Sqrt(Math.Pow((aPosX - sPosX), 2) + Math.Pow((aPosZ - sPosZ), 2));
 
 		for(int i = 0; i < max; i++)
 		{
@@ -173,7 +173,7 @@ public class Genetic
 					}
 				}
 
-				distance = Math.Sqrt(Math.Pow((Math.Abs(aPosX) - Math.Abs(sPosX)), 2) + Math.Pow((Math.Abs(aPosZ) - Math.Abs(sPosZ)), 2));
+				distance = Math.Sqrt(Math.Pow((aPosX - sPosX), 2) + Math.Pow((aPosZ - sPosZ), 2));
 
 				if(distance == 0)
 				{
@@ -184,6 +184,62 @@ public class Genetic
 
 		return max;
 	}
+
+	/*public int EvaluateFinal(List<Movement> pattern)
+	{
+		int max = 20;
+		int sPosX = 0;
+		int sPosZ = 0;
+		int aPosX = 1;
+		int aPosZ = 9;
+		
+		double distance = Math.Sqrt(Math.Pow((aPosX - sPosX), 2) + Math.Pow((aPosZ - sPosZ), 2));
+		MonoBehaviour.print("Distance : " + distance);
+		
+		for(int i = 0; i < max; i++)
+		{
+			foreach(Movement m in pattern)
+			{
+				if(m == Movement.Vertical)
+				{
+					if(UnityEngine.Random.Range(0,2) == 1)
+					{
+						sPosX += 1;
+					}
+					else
+					{
+						sPosX -= 1;
+					}
+
+					MonoBehaviour.print("sPosX : " + sPosX + ", sPosZ : " + sPosZ + ", aPosX : " + aPosX + ", aPosZ : " + aPosZ);
+				}
+				else if(m == Movement.Horizontal)
+				{
+					if(UnityEngine.Random.Range(0,2) == 1)
+					{
+						sPosZ += 1;
+					}
+					else
+					{
+						sPosZ -= 1;
+					}
+
+					MonoBehaviour.print("sPosX : " + sPosX + ", sPosZ : " + sPosZ + ", aPosX : " + aPosX + ", aPosZ : " + aPosZ);
+				}
+				
+				distance = Math.Sqrt(Math.Pow((aPosX - sPosX), 2) + Math.Pow((aPosZ - sPosZ), 2));
+				MonoBehaviour.print("Distance : " + distance);
+				
+				if(distance == 0)
+				{
+					return i;
+					MonoBehaviour.print("Distance : " + distance);
+				}
+			}
+		}
+		
+		return max;
+	}*/
 
 	public void Compare()
 	{
@@ -217,11 +273,13 @@ public class Genetic
 
 	public List<Movement> Generate()
 	{
+		// Population initiale
 		_patterns = GeneratePattern();
 		_population = GeneratePopulation();
 
 		for(int i = 0; i < _iterations; i++)
 		{
+			// Notation population initiale
 			_notations = new List<Notation>();
 
 			foreach(Neuronal n in _population)
@@ -242,10 +300,12 @@ public class Genetic
 				_notations.Add(new Notation(note, index, _population.IndexOf(n)));
 			}
 
+			// Nouvelle population avec mutation
 			_newPatterns = GeneratePattern();
 
 			_newPopulation = GeneratePopulation(_mutation);
 
+			// Notation nouvelle population
 			_newNotations = new List<Notation>();
 			
 			foreach(Neuronal n in _newPopulation)
@@ -266,11 +326,15 @@ public class Genetic
 				_newNotations.Add(new Notation(note, index, _newPopulation.IndexOf(n)));
 			}
 
+			// Selection de la population elite
 			Compare();
 		}
 
-		MonoBehaviour.print("Note : " + _notations[0].Note);
+		//MonoBehaviour.print("Note : " + _notations[0].Note);
 
+		//MonoBehaviour.print("Note Final : " + EvaluateFinal(_patterns[0]));
+
+		// Retour du meilleur pattern des différentes populations
 		return _patterns[0];
 	}
 
