@@ -14,7 +14,7 @@ public class Field : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = new Field();
+                _instance = GameObject.FindObjectOfType<Field>().GetComponent<Field>();
             }
 
             return _instance;
@@ -85,6 +85,22 @@ public class Field : MonoBehaviour
         }
 
 		Generate();
+
+        Monster t = ListMonsters[9];
+        List<Movement> sss = new List<Movement>();
+        Movement p = new Movement();
+        p = Movement.Vertical;
+        sss.Add(p);
+        p = new Movement();
+        p = Movement.Vertical;
+        sss.Add(p);
+        p = new Movement();
+        p = Movement.Horizontal;
+        sss.Add(p);
+        t.listMovements = sss;
+
+        QLearning test = new QLearning();
+        test.GenerateArrayReward(ListMonsters[9]);
 
 		GameManager.Instance.currentTeamTurn = Team.A;
 		GameManager.Instance.LaunchLevel();

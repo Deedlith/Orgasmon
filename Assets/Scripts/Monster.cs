@@ -55,6 +55,7 @@ public class Monster
 	public List<Movement> listMovements;
 	public int speed;
     public int overall = 0;
+    public int id = -1;
 
 	public Square currentSquare = null;
 
