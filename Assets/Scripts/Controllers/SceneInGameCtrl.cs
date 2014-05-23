@@ -70,25 +70,70 @@ public class SceneInGameCtrl : MonoBehaviour
             objectHit = hit.collider.gameObject;
             if (objectHit.name.Equals("PlayGame"))
             {
-                initGame.SetActive(false);
-                rootInGame.SetActive(true);
+                if (initGame)
+                    initGame.SetActive(false);
+                if (rootInGame)
+                    rootInGame.SetActive(true);
                 UnBindInit();
                 Field.Instance.Generate();
                 GameManager.Instance.LaunchLevel();
             }
-            else if (objectHit.name.Equals("Regenerate") && nbMonsterSelected == 1 && monster!= null)
+            else if (objectHit.name.Equals("Regenerate") && nbMonsterSelected == 1 && monster != null && monsterGo != null)
             {
                 nbMonsterSelected = 0;
-                Field.Instance.RegenerateMonster(monster,monsterGo.transform.parent.gameObject);
+                Field.Instance.RegenerateMonster(monster, monsterGo.transform.parent.gameObject);
             }
             else if (objectHit.name.Equals("Fusion") && nbMonsterSelected == 2)
             {
                 nbMonsterSelected = 0;
                 Field.Instance.Fusion();
             }
-            else if (hit.collider.name.Contains("Monster_A"))
+            /*else if (objectHit.name.Contains("Monster_A"))
             {
-                monsterGo = hit.collider.gameObject;
+                print("prout");
+                monsterGo = objectHit.gameObject;
+                monsterGo.transform.parent.transform.FindChild("InfosMonsters").gameObject.SetActive(true);
+                Field.Instance.dicoMonsterGOMonster.TryGetValue(monsterGo, out monster);
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if (nbMonsterSelected < 2)
+                    {
+                        monsterGo.transform.renderer.material.color = Color.red;
+                        monster.isSelected = true;
+                        nbMonsterSelected++;
+                    }
+                }
+                else if (Input.GetMouseButtonDown(1))
+                {
+                    monsterGo.transform.renderer.material.color = Color.white;
+                    monster.isSelected = false;
+                    nbMonsterSelected--;
+                    monsterGo = null;
+                }
+            }
+        }
+        else
+        {
+            if (monsterGo != null)
+            {
+                monsterGo.transform.parent.transform.FindChild("InfosMonsters").gameObject.SetActive(false);
+            }
+        }*/
+        }
+    }
+
+    void Update()
+    {
+        RaycastHit hit = new RaycastHit();
+        GameObject objectHit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out hit, 1000))
+        {
+            objectHit = hit.collider.gameObject;
+            if (objectHit.name.Contains("Monster_A") && initGame.activeSelf)
+            {
+                print("prout");
+                monsterGo = objectHit.gameObject;
                 monsterGo.transform.parent.transform.FindChild("InfosMonsters").gameObject.SetActive(true);
                 Field.Instance.dicoMonsterGOMonster.TryGetValue(monsterGo, out monster);
                 if (Input.GetMouseButtonDown(0))
@@ -133,6 +178,7 @@ public class SceneInGameCtrl : MonoBehaviour
             else if (objectHit.name.Equals("BackMainMenu"))
             {
                 nbMonsterSelected = 0;
+                Field.Instance.ResetGame();
                 Application.LoadLevel("MainScene");
             }
         }

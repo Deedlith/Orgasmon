@@ -12,11 +12,6 @@ public class Player : MonoBehaviour {
     float duration= 0.9f; // duration of movement in seconds
     bool moving= false; // flag to indicate it's moving
 
-	void Awake()
-	{
-
-	}
-	
 	// Use this for initialization
 	void Start () {
 		GameManager.Instance.LevelEvent += (bool isOnLevel) => { if(isOnLevel == true) BindMove(); else UnbindMove(); };
@@ -48,7 +43,7 @@ public class Player : MonoBehaviour {
 		if(Physics.Raycast(ray, out hit, 1000)) 
 		{
 			GameObject objectHit = hit.collider.gameObject;
-            if (objectHit.name.Contains("Square") && _currentMonsterGO != null)
+            if (objectHit != null && objectHit.name.Contains("Square") && _currentMonsterGO != null)
 			{
 				print ("SQUARE SELECTED : " + objectHit.name);
                 StartCoroutine(MoveMonster(_currentMonsterGO, objectHit));

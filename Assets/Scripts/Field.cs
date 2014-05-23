@@ -28,7 +28,6 @@ public class Field : MonoBehaviour
 	public List<GameObject> ListSquaresGo = new List<GameObject>();
 	public List<Monster> ListMonsters = new List<Monster>();
     public List<GameObject> ListMonstersGo = new List<GameObject>();
-    public List<GameObject> ListMonstersGoPlayer = new List<GameObject>();
     public Dictionary<GameObject, Monster> dicoMonsterGOMonster = new Dictionary<GameObject, Monster>();
 	
 	void Start () {
@@ -385,5 +384,12 @@ public class Field : MonoBehaviour
                     &&
                     (go.transform.position.z == m.currentSquare.PositionZ)).First();
         return goToReturn;
+    }
+
+    public void ResetGame()
+    {
+        dicoMonsterGOMonster.Clear();
+        ListMonsters.Clear();
+        ListMonstersGo.Clear();
     }
 }
