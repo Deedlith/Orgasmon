@@ -93,7 +93,7 @@ public class Field : MonoBehaviour
 					monsterGo.renderer.material.color = Color.magenta; 
 					break;
 			 	case 4: 
-					monsterGo.renderer.material.color = Color.red; 
+					monsterGo.renderer.material.color = Color.black; 
 					break;
 			 	default: 
 					monsterGo.renderer.material.color = Color.white;
