@@ -84,7 +84,7 @@ public class Monster
         listDefensePatterns.Add(defense);
         // Movement Pattern
         listMovements = listMov;
-        listMovements.Add(Movement.Vertical);
+        //listMovements.Add(Movement.Vertical);
         speed = s;
         whichTeam = whichT;
     }
